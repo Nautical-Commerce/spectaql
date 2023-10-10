@@ -425,7 +425,7 @@ info:
 
   # If you really want to hide the "Documentation by" at the bottom of your output, you can do so here
   # Default: false
-  x-hidePoweredBy: false
+  x-hidePoweredBy: true
 
   # If not using introspection.url OR servers[], you need to provide x-url
   # x-url: https://yoursite.com/graphql
