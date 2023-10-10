@@ -115,7 +115,7 @@ ensureDirectory(vendorTargetDir)
     await exec(command, { stdio: [undefined, undefined, 'ignore'] })
 
     // Remove the tarball
-    await exec(`rm ${tarballPath}`)
+    removeFile(tarballPath)
 
     // Only should be set when we should write it to the file system
     if (newCacheValue) {
@@ -127,7 +127,7 @@ ensureDirectory(vendorTargetDir)
 })()
 
 function isDryRunFn() {
-  return process.env.npm_config_dry_run === true
+  return [true, 'true'].includes(process.env.npm_config_dry_run)
 }
 
 function stripSpecial(str) {
@@ -145,6 +145,16 @@ function ensureDirectory(pth) {
   if (!pathExists(pth)) {
     fs.mkdirSync(pth)
   }
+}
+
+function removeFile(pth, options) {
+  options = {
+    // When true, exceptions will be ignored if path does not exist. Default: false.
+    force: true,
+    ...options,
+  }
+  // https://nodejs.org/docs/latest-v16.x/api/fs.html#fsrmsyncpath-options
+  return fs.rmSync(pth, options)
 }
 
 function getTarballNameFromOutput(str) {

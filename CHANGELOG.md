@@ -1,3 +1,35 @@
+### 2.3.0
+  - Support Logo and Favicon Base64 embedding, as well as URL specification. https://github.com/anvilco/spectaql/issues/807
+
+### 2.2.1
+  - Fix publishing and installation process. https://github.com/anvilco/spectaql/issues/876
+
+### 2.2.0
+  - Fix/add support for `EnumValues`.
+  - Non-zero exit code when there's an error.
+  - Fix scrollspy issue. https://github.com/anvilco/spectaql/pull/852 Thanks @MarcEspiard
+  - Dependency updates.
+
+### 2.1.1
+  - Fix cross-OS bug where `rm` was used. https://github.com/anvilco/spectaql/issues/837
+  - Dependency updates
+
+### 2.1.0
+  - Add support for `inputValueDeprecation`
+  - Dependency updates
+
+### 2.0.9
+  - Add `info.contact.url` to the templates
+
+### 2.0.8
+  - Dependency updates
+
+### 2.0.7
+  - Dependency updates
+
+### 2.0.6
+  - Dependency updates
+
 ### 2.0.5
   - Remove `foundation-sites` dependency
 
