@@ -6,11 +6,12 @@
 $max-content-width: 200em;
 $drawer-size: 250px;
 $drawer-size-desktop-large: 300px;
+$heading-color: #eeeeee;
 
 $content-padding: 20px;
 
 $sidebar-top: 0px;
-//$sidebar-background: #fff;
+$sidebar-background: #fff;
 
 $size-tablet: 32em;
 $size-desktop: 48em;
@@ -28,8 +29,8 @@ $text-color-dark-subtle: #fefefe;
 $link-color: #1779ba;
 $link-color-hover: #1468a0;
 
-//$background: white;
-//$background-subtle: #fafafa;
+$background: white;
+$background-subtle: #fafafa;
 
 $border-color: #d8d8d8;
 $border-color-subtle: #e0e0e0;
@@ -52,6 +53,7 @@ $font-size-large-heading: 2.25em;
 $font-size-large-heading-mobile: 1.72em;
 $font-size-code: $font-size-small;
 $font-size-small-heading: .875em;
+$font-size-extra-small-heading: .75em;
 $font-size-example-heading: .875em;
 
 $padding-code-block: 15px $content-padding;
@@ -241,7 +243,7 @@ $text-color-examples: white;
     }
 
     a:hover {
-      color: $link-color-hover;
+      color: #999999;
     }
 
     @media (min-width: $size-sidebar-break) {
@@ -271,15 +273,16 @@ $text-color-examples: white;
       margin-top: $content-padding;
 
       li {
-        margin-bottom: math.div($content-padding, 4);
+        margin-bottom: math.div($content-padding, 6);
       }
     }
 
     .nav-group-title {
       font-size: $font-size-small-heading;
+      text-transform: uppercase;
       font-weight: normal;
       margin: 0 0 6px 0;
-      color: $text-color-subtle;
+      color: $heading-color;
     }
 
     .nav-group-section-title {
@@ -419,7 +422,7 @@ $text-color-examples: white;
     code {
       padding: 1px 4px;
       border-radius: $border-radius;
-      background: $background-subtle;
+      background: #3e3e49d4;
       border: $border-size solid $border-color-subtle;
     }
 

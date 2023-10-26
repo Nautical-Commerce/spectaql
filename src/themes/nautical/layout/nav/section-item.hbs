@@ -1,7 +1,7 @@
 {{#unless hideInNav}}
   <li class="nav-group-section">
     <{{ itemHeadingTag headingNumber }} class="nav-group-section-title" {{{ ariaLevel headingNumber }}}>
-      <a href="#group-{{./htmlId}}">{{name}}</a>
+      <a href="#group-{{./htmlId}}">{{name}}</a>{{#if isQuery}}<span>Q</span>{{/if}}
     </{{ itemHeadingTag headingNumber }}>
     <ul class="nav-group-section-items">
       {{#each items}}

@@ -13,6 +13,6 @@
       </ul>
     </div>
   {{else}}
-    <li><a href="#{{./htmlId}}">{{name}}</a></li>
+    <li><a href="#{{./htmlId}}">{{name}}</a>{{#if isQuery}}<span>Q</span>{{/if}}</li>
   {{/if}}
 {{/unless}}
