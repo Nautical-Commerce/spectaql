@@ -175,6 +175,12 @@ function addMutationToItem({
   })
 }
 
+//function generateGraphQLPlaygroundUrl(item, flavor) {
+//  const queryPart = `query=${encodeURI(item[flavor])}`;
+//  const variablesPart = item.variables ? `&variables=${encodeURI(JSON.stringify(item.variables))}` : '';
+//  return `http://your-graphql-server/graphql?${queryPart}${variablesPart}`;
+//}
+
 function addSubscriptionToItem({
   item,
   introspectionResponse,
@@ -216,6 +222,8 @@ function _addQueryToItem({
 
   item[flavor] = query
   item.variables = variables
+  //item.playgroundUrl = generateGraphQLPlaygroundUrl(item, flavor);
+
 
   const { underlyingType, isRequired, isArray, itemsRequired } =
     analyzeTypeIntrospection(item.type)

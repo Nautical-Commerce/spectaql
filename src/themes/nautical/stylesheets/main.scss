@@ -10,7 +10,7 @@ $drawer-size-desktop-large: 300px;
 $content-padding: 20px;
 
 $sidebar-top: 0px;
-$sidebar-background: #fff;
+//$sidebar-background: #fff;
 
 $size-tablet: 32em;
 $size-desktop: 48em;
@@ -20,16 +20,16 @@ $size-desktop-large: 64em;
 // Variables used in this theme
 //////////////////////
 
-$font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, 'Helvetica Neue', Ubuntu, sans-serif;
+$font-family: "Inter Tight", sans-serif;
 $font-family-monospaced: Menlo, Consolas, monospace;
-$text-color: #2d3134;
+$text-color: #D3D3D3;
 $text-color-subtle: #999999;
 $text-color-dark-subtle: #fefefe;
 $link-color: #1779ba;
 $link-color-hover: #1468a0;
 
-$background: white;
-$background-subtle: #fafafa;
+//$background: white;
+//$background-subtle: #fafafa;
 
 $border-color: #d8d8d8;
 $border-color-subtle: #e0e0e0;
@@ -57,7 +57,7 @@ $font-size-example-heading: .875em;
 $padding-code-block: 15px $content-padding;
 $font-size-code-block: .82em;
 $text-color-code-block: white;
-$background-code-block: #222222;
+//$background-code-block: #222222;
 $line-height-code-block: 1.4;
 
 $container-padding-mobile: $content-padding;
@@ -71,7 +71,7 @@ $background-arguments: $background-subtle;
 $background-examples: #2d3134;
 $text-color-examples: white;
 
-$background-sidebar: $background-subtle;
+//$background-sidebar: $background-subtle;
 
 // Imports
 //////////////////////

@@ -1,0 +1,26 @@
+// custom.scss
+$background: #1c1d35;
+$background-subtle: #3e3e49d4;
+$sidebar-background: #1c1d35;
+$background-sidebar: #1c1d35;
+$background-examples: #13141e;
+
+$text-color: #D3D3D3;
+$text-color-subtle: #999999;
+
+$link-color: #26b2e3;
+$link-color-hover: #1a9ac8;
+
+$border-color: #4A66A7;
+$border-color-subtle: #3B507D;
+
+$background-code-block-heading: #3e3e49d4;
+$background-code-block: #3e3e49d4;
+$background-arguments: #3e3e49d4;
+
+#spectaql {
+
+    .row-field-arguments .field-arguments {
+    border: none;
+    }
+  }

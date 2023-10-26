@@ -1,0 +1,18 @@
+{{#unless hideInNav}}
+  {{#if items}}
+    <div class="nav-group">
+      <{{ itemHeadingTag headingNumber }} class="nav-group-title" {{{ ariaLevel headingNumber }}}>{{name}}</{{ itemHeadingTag headingNumber }}>
+      <ul class="nav-group-items">
+        {{#each items}}
+          {{#if makeNavSection}}
+            {{>layout/nav/section-item headingNumber=(math ../headingNumber "+" 1 )}}
+          {{else}}
+            {{>layout/nav/item headingNumber=(math ../headingNumber "+" 1 )}}
+          {{/if}}
+        {{/each}}
+      </ul>
+    </div>
+  {{else}}
+    <li><a href="#{{./htmlId}}">{{name}}</a></li>
+  {{/if}}
+{{/unless}}

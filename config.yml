@@ -19,7 +19,7 @@ spectaql:
   # targetDir: path/to/output
 
   # Optional path to an image to use as the logo in the top-left of the output
-  logoFile: ./static/logo-dark.png
+  logoFile: ./static/nautical-api-logo_dark.png
   # Optional boolean indicating whether to preserve the filename of the logo provided.
   # If false, the logo name will default to "logo"
   preserveLogoName: false
@@ -27,7 +27,7 @@ spectaql:
   # inappropriate size.
   #
   # Default: None; No "height" property will be set on the logo
-  #logoHeightPx: 18
+  logoHeightPx: 40
 
   # Optional path to an image to use as a favicon for the site when it's not embedded
   # faviconFile: path/to/favicon.png
@@ -46,7 +46,7 @@ spectaql:
   # "spectaql": Outputs the same HTML structure as the "default" theme, but with some CSS enhancements
   #
   # Default: "default"
-  themeDir: ./custom-theme
+  themeDir: ./src/themes/nautical
 
   # If you're embedding SpectaQL's output, and you've got something like a Nav Bar that
   # gets in the way, you can use this value to adjust the scroll offset
@@ -161,7 +161,7 @@ introspection:
   # be represented before a fragment placeholder is rendered?
   #
   # Default: 1
-  fieldExpansionDepth: 2
+  fieldExpansionDepth: 1
   #
   #
   ##############################################
@@ -364,7 +364,10 @@ servers:
     headers:
       - name: Authorization
         example: Bearer <YOUR_TOKEN_HERE>
-        comment: Your API token from the dashboard. Must be included in all API calls.
+        comment: Your app access token
+      - name: Authorization
+        example: JWT <YOUR_TOKEN_HERE>
+        comment: Your user access token
 
 info:
   # Tries to adhere to OpenAPI Specification https://swagger.io/specification/#info-object
@@ -428,5 +431,5 @@ info:
   x-hidePoweredBy: true
 
   # If not using introspection.url OR servers[], you need to provide x-url
-  # x-url: https://yoursite.com/graphql
+  # x-url: https://api-showcase.nauticalcommerce.com/graphql/
 
