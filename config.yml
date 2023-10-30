@@ -16,7 +16,7 @@ spectaql:
   # Set to null to not write the output to the filesystem, making it only available via the API (default: public)
   #
   # Default: public
-  # targetDir: path/to/output
+  targetDir: ../static/api/new/
 
   # Optional path to an image to use as the logo in the top-left of the output
   logoFile: ./static/nautical-api-logo_dark.png
@@ -96,7 +96,7 @@ introspection:
 
   # URL of the GraphQL endpoint to hit if you want to generate the documentation based on live Introspection Query results
   # NOTE: If not using introspection.url OR servers[], you need to provide x-url below
-  #url: https://yoursite.com/graphql
+  # url: https://yoursite.com/graphql
 
   #
   #
@@ -354,7 +354,7 @@ servers:
 
   # same format as for OpenAPI Specification https://swagger.io/specification/#server-object
 
-  - url: https://yoursite.com/graphql
+  - url: https://api-yoursite.mpconsole.com/graphql/
     description: Production Server
     # Indicates to use this server's URL as the typical GraphQL request base in the documentation
     # If no server entries have this indicator, the first server's URL will be used.
@@ -363,11 +363,8 @@ servers:
     # A place to list any Headers for your GraphQL API calls
     headers:
       - name: Authorization
-        example: Bearer <YOUR_TOKEN_HERE>
-        comment: Your app access token
-      - name: Authorization
-        example: JWT <YOUR_TOKEN_HERE>
-        comment: Your user access token
+        example: "{ Bearer | JWT } <YOUR_TOKEN_HERE>"
+        comment: Your access token
 
 info:
   # Tries to adhere to OpenAPI Specification https://swagger.io/specification/#info-object
@@ -400,8 +397,10 @@ info:
   description: |
     Welcome to the Nautical Commerce GraphQL API reference.  This reference guide is designed to help you execute various operations in our platform to help you manage your storefront and commerce platform.
 
-    [GraphQL](https://graphql.org/) is a query language for APIs and a runtime for fulfilling those queries with your existing data. GraphQL provides a complete and understandable description of the data in your API, gives clients the power to ask for exactly what they need and nothing more, makes it easier to evolve APIs over time, and enables powerful developer tools.    
-  version: 1.11.0
+    [GraphQL](https://graphql.org/) is a query language for APIs and a runtime for fulfilling those queries with your existing data. GraphQL provides a complete and understandable description of the data in your API, gives clients the power to ask for exactly what they need and nothing more, makes it easier to evolve APIs over time, and enables powerful developer tools.   
+
+     If you're just getting started with Nautical's API, see the developer [Get Started Guide](https://guide.nauticalcommerce.com/docs/developer/getting-started/graphql/).
+  version: 1.12
   title: Nautical API Reference
   # This is non-standard and optional. If omitted, will use "title". Also, only relevant
   # when building non-embedded.

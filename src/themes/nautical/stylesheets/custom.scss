@@ -18,9 +18,60 @@ $background-code-block-heading: #3e3e49d4;
 $background-code-block: #3e3e49d4;
 $background-arguments: #3e3e49d4;
 
-#spectaql {
+.copy-icon {
+  font-size: 1.0rem !important;
+  color: #b0b0b0;
+}
 
+.copy-icon:hover {
+  color: #fff;
+  cursor: pointer;
+}
+
+.copy-success {
+  display: none;
+  background-color: rgba(128, 128, 128, 0.7);
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 5px;
+  margin-left: 5px;
+  border-radius: 5px;
+  max-width: fit-content;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.6em;   /* Adjust size if needed */
+  padding: 2px 6px;   /* Padding around the "Q" or "M" */
+  border-radius: 10px;
+  font-weight: bold; 
+  text-align: center;
+  margin-left: 6px;
+  margin-right: 4px;  /* Space between the badge and other content */
+}
+
+.badge--query {
+  background-color: #87cefa87;  /* Light blue background for "Q" */
+  color: #000033;   /* Midnight blue text color */
+}
+
+.badge--mutation {
+  background-color: #ffd7008a;  /* Yellow background for "M" */
+  color: #000033;   /* Midnight blue text color */
+}
+
+#spectaql {
     .row-field-arguments .field-arguments {
     border: none;
+    }
+    .operation-heading {
+      font-family: $font-family-monospaced !important;
+      color: #fff;
+    }
+    .doc-heading {
+      color: #fff
+    }
+    .group-heading {
+      color: white
     }
   }

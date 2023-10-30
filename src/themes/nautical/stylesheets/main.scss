@@ -44,8 +44,8 @@ $text-color-error: #c60609;
 $line-height: 1.6;
 $line-height-heading: 1.2;
 
-$font-size: 16px;
-$font-size-mobile: 14px;
+$font-size: 1em;
+$font-size-mobile: 0.9em;
 
 $font-size-small: .875em;
 $font-size-extra-small: .75em;
@@ -235,7 +235,7 @@ $text-color-examples: white;
     background: $background-sidebar;
 
     a {
-      color: $text-color;
+      color: $text-color-subtle;
     }
 
     a.nav-scroll-active {
@@ -243,7 +243,7 @@ $text-color-examples: white;
     }
 
     a:hover {
-      color: #999999;
+      color: $text-color;
     }
 
     @media (min-width: $size-sidebar-break) {
@@ -330,9 +330,9 @@ $text-color-examples: white;
     .operation-heading,
     .definition-heading {
       code {
-        font-family: inherit;
+        font-family: $font-family-monospaced;
         font-size: inherit;
-        font-weight: inherit;
+        color: #fff;
       }
     }
   }

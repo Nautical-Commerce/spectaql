@@ -11,6 +11,7 @@
 
   <h2 class="operation-heading {{#if (and isDeprecated (not @root.info.x-hideIsDeprecated)) }}operation-deprecated{{/if}}">
     {{md (codify name) stripParagraph="true"}}
+    <i class="fas fa-link copy-icon"></i><span class="copy-success" style="display:none;">Copied</span>
   </h2>
 
   {{#if (and deprecationReason (not @root.info.x-hideDeprecationReason))}}
@@ -59,7 +60,7 @@
         <h4 class="example-heading">Example</h4>
 
         <div class="example-section example-section-is-code operation-query-example">
-          <h5>Query</h5>
+          {{#if isMutation}}<h5>Mutation</h5>{{else}}<h5>Query</h5>{{/if}}
           {{printGraphQL (firstTruthy query mutation subscription)}}
         </div>
 

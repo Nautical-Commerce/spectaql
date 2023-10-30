@@ -10,7 +10,7 @@
   {{/unless}}
 
   <h2 class="operation-heading {{#if (and isDeprecated (not @root.info.x-hideIsDeprecated)) }}operation-deprecated{{/if}}">
-    {{md (codify name) stripParagraph="true"}}
+    {{md (codify name) stripParagraph="true"}} 
   </h2>
 
   {{#if (and deprecationReason (not @root.info.x-hideDeprecationReason))}}
