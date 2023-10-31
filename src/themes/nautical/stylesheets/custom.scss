@@ -84,9 +84,6 @@ $background-arguments: #3e3e49d4;
 
 #sidebar {
   ul li a {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     line-height: 1.5;
 };
  .nav-item {
@@ -117,4 +114,20 @@ $background-arguments: #3e3e49d4;
   color: #FCD839;
   font-size: 0.7rem;
   text-transform: lowercase;
+}
+
+a {
+  position: relative;
+}
+
+
+a.nav-scroll-active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -10px; /* This will place the pseudo-element to the left of the anchor tag */
+  height: 100%; 
+  width: 3px; /* Adjust width for desired border thickness */
+  background-color: #26B2E3; /* Change to your desired border color */
+  z-index: -1;
 }

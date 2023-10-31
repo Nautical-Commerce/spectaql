@@ -161,7 +161,7 @@ introspection:
   # be represented before a fragment placeholder is rendered?
   #
   # Default: 1
-  fieldExpansionDepth: 1
+  fieldExpansionDepth: 2
   #
   #
   ##############################################
@@ -347,7 +347,7 @@ extensions:
   # do not have an example already set via some other method. Usually this is a good
   # thing to have on, but it is possible to turn it off.
   # Default: true
-  graphqlScalarExamples: true
+  graphqlScalarExamples: false
 
 servers:
   # NOTE: If not using introspection.url OR servers[], you need to provide x-url

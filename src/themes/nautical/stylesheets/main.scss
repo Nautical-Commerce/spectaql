@@ -26,7 +26,7 @@ $font-family-monospaced: Menlo, Consolas, monospace;
 $text-color: #D3D3D3;
 $text-color-subtle: #999999;
 $text-color-dark-subtle: #fefefe;
-$link-color: #1779ba;
+$link-color: #0B79B7;
 $link-color-hover: #1468a0;
 
 $background: white;
@@ -239,7 +239,8 @@ $text-color-examples: white;
     }
 
     a.nav-scroll-active {
-      color: $link-color;
+      color: white;
+      font-weight: 700;
     }
 
     a:hover {
