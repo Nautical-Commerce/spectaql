@@ -30,7 +30,7 @@ spectaql:
   logoHeightPx: 40
 
   # Optional path to an image to use as a favicon for the site when it's not embedded
-  # faviconFile: path/to/favicon.png
+  faviconFile: ./static/favicon.ico
   # Optional boolean indicating whether to preserve the filename of the faviconFile provided.
   # If false, the favicon name will default to "favicon"
   # preserveFaviconName: false
