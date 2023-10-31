@@ -10,10 +10,11 @@
   {{/unless}}
 
   <h2 class="operation-heading {{#if (and isDeprecated (not @root.info.x-hideIsDeprecated)) }}operation-deprecated{{/if}}">
+    <i class="fas fa-link copy-icon"></i>
     {{md (codify name) stripParagraph="true"}}
-    <i class="fas fa-link copy-icon"></i><span class="copy-success" style="display:none;">Copied</span>
+    {{#if isQuery}}<span class="badge badge--query">Query</span>{{else if isMutation}}<span class="badge badge--mutation">Mutation</span>{{else if isSubscription}}<span class="badge badge--mutation">Subscription</span>{{/if}}
   </h2>
-
+  
   {{#if (and deprecationReason (not @root.info.x-hideDeprecationReason))}}
     <div class="doc-row">
       <div class="doc-copy">

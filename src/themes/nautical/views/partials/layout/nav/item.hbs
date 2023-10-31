@@ -13,6 +13,7 @@
       </ul>
     </div>
   {{else}}
-    <li><a href="#{{./htmlId}}">{{name}} {{#if isQuery}}<span class="badge badge--query">Q</span>{{else if isMutation}}<span class="badge badge--mutation">M</span>{{else if isSubscription}}<span class="badge badge--mutation">S</span>{{/if}}</a></li>
+    {{#if isQuery}}<li class="query-nav-item">Queries</li>{{else if isMutation}}<li class="mutation-nav-item">Mutations</li>{{else if isSubscription}}<li class="subscription-nav-item">Subscriptions</li>{{/if}}
+    <li><a class="nav-item" href="#{{./htmlId}}">{{name}}</a></li>
   {{/if}}
 {{/unless}}

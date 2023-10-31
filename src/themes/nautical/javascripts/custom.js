@@ -1,18 +1,27 @@
 document.addEventListener("DOMContentLoaded", function() {
-  document.querySelectorAll('.copy-icon').forEach(function(element) {
-    element.addEventListener('click', function() {
-      var id = this.closest('.operation').getAttribute('id');
-      var url = window.location.href.split('#')[0] + '#' + id;
-      navigator.clipboard.writeText(url);
+  let firstQuery = document.querySelector('.query-nav-item');
+  if (firstQuery) {
+    firstQuery.classList.add('first-query');
+  }
 
-      window.history.replaceState(null, null, '#' + id);
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  let firstMutation = document.querySelector('.mutation-nav-item');
+  if (firstMutation) {
+    firstMutation.classList.add('first-mutation');
+  }
+});
 
-      var successMessage = this.nextElementSibling;
-      successMessage.style.display = 'inline-block';
-      setTimeout(function() {
-        successMessage.style.display = 'none';
-      }, 400);
-    });
+document.addEventListener("DOMContentLoaded", function() {
+  let uls = document.querySelectorAll('ul.nav-group-section-items');
+
+  uls.forEach((ul) => {
+    let firstQuery = ul.querySelector('.query-nav-item');
+    if (firstQuery) {
+      firstQuery.classList.add('first-query');
+    }
+
+    let firstMutation = ul.querySelector('.mutation-nav-item');
+    if (firstMutation) {
+      firstMutation.classList.add('first-mutation');
+    }
   });
 });
