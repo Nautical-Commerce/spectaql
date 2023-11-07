@@ -1,7 +1,7 @@
 function scrollSpy() {
-  var INIT_DELAY_MS = 400
-  var SCROLL_DEBOUNCE_MS = 0
-  var RESIZE_DEBOUNCE_MS = 400
+  var INIT_DELAY_MS = 500
+  var SCROLL_DEBOUNCE_MS = 300
+  var RESIZE_DEBOUNCE_MS = 300
 
   var PADDING = 0
   // If we are applying a scroll padding, we'll be doing it to the HTML element
@@ -42,24 +42,16 @@ function scrollSpy() {
     })
   }
 
-  function toggleSection(section, shouldExpand) {
-    if (shouldExpand) {
-      // Logic to show or expand the section
-      section.style.display = 'block'; // or any other logic to expand the section
-    } else {
-      // Logic to hide or collapse the section
-      section.style.display = 'none'; // or any other logic to collapse the section
-    }
-  }
-
   function isElementInViewport(el) {
-    var rect = el.getBoundingClientRect();
+    // https://stackoverflow.com/a/7557433/347554
+    var rect = el.getBoundingClientRect()
     return (
       rect.top >= 0 &&
       rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.bottom <=
+        (window.innerHeight || document.documentElement.clientHeight) &&
       rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
+    )
   }
 
   var handleResize = debounce(function () {
@@ -67,38 +59,32 @@ function scrollSpy() {
     handleScroll()
   }, RESIZE_DEBOUNCE_MS)
 
-  var lastExpandedSection = null; // New variable to keep track of the last expanded section
-
   var handleScroll = debounce(function () {
-    var scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
-    var index = getVisibleSectionIndex(scrollPosition);
-  
-      // Use the updated function to check if lastExpandedSection is out of view.
-      if (lastExpandedSection && !isElementInViewport(lastExpandedSection)) {
-        toggleSection(lastExpandedSection, false);
-        lastExpandedSection = null;
-      }      
-    
+    var scrollPosition =
+      document.documentElement.scrollTop || document.body.scrollTop
+    var index = getVisibleSectionIndex(scrollPosition)
+
     if (index === currentIndex) {
       return
     }
 
-    currentIndex = index;
-    var section = sections[index];
-  
-    var activeEl = document.querySelector(`.${ACTIVE_CLASS}`);
-    var nextEl = section ? document.querySelector('#nav a[href="#' + section.id + '"]') : null;
-  
-    var parentNextEl = getParentSection(nextEl);
-    var parentActiveEl = getParentSection(activeEl);
-    var isDifferentParent = parentActiveEl !== parentNextEl;
-  
+    currentIndex = index
+    var section = sections[index]
+
+    var activeEl = document.querySelector(`.${ACTIVE_CLASS}`)
+    var nextEl = section
+      ? document.querySelector('#nav a[href="#' + section.id + '"]')
+      : null
+
+    var parentNextEl = getParentSection(nextEl)
+    var parentActiveEl = getParentSection(activeEl)
+    var isDifferentParent = parentActiveEl !== parentNextEl
+
     if (parentActiveEl && isDifferentParent) {
-      toggleSectionExpansion(parentActiveEl, false);
+      toggleSectionExpansion(parentActiveEl, false)
     }
     if (parentNextEl && isDifferentParent) {
-      toggleSectionExpansion(parentNextEl, true);
-      lastExpandedSection = parentNextEl; // Update the last expanded section
+      toggleSectionExpansion(parentNextEl, true)
     }
 
     if (nextEl) {
@@ -108,7 +94,6 @@ function scrollSpy() {
       } else if (nextEl.scrollIntoView && !isElementInViewport(nextEl)) {
         nextEl.scrollIntoView({ block: 'center', inline: 'start' })
       }
-      expandParentUlForActiveItem(nextEl);
     }
 
     if (activeEl) {
@@ -116,30 +101,7 @@ function scrollSpy() {
     }
   }, SCROLL_DEBOUNCE_MS)
 
-  // New function to expand the parent UL if it contains an active link
-function expandParentUlForActiveItem(activeLink) {
-  // Get closest UL that is an ancestor of the active link
-  var ul = activeLink.closest('ul');
-  if (!ul) {
-    return; // If there's no ul, nothing to expand
-  }
-
-  // Find the associated nav-group-title
-  var navGroupTitle = ul.previousElementSibling;
-  if (navGroupTitle && navGroupTitle.classList.contains('nav-group-title')) {
-    // Check the content and update accordingly
-    var content = navGroupTitle.textContent.trim();
-    var itemType = content.split(' ')[0]; // Assuming the format is 'Type +'
-    if (content.endsWith('+')) {
-      // Only proceed if the content ends with a '+', indicating it's collapsible
-      ul.style.display = 'block'; // Show the UL
-      navGroupTitle.textContent = itemType + ' -'; // Update the text to show '-'
-      // Ensure the proper class is added to the navGroupTitle for styling if needed
-      addNavItemClass(navGroupTitle, itemType);
-    }
-  }
-}
-
+  //original 
   function toggleSectionExpansion(element, shouldExpand) {
     const classListFunc = shouldExpand ? 'add' : 'remove'
     while (element) {

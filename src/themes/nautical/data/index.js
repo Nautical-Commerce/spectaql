@@ -258,16 +258,6 @@ module.exports = ({
     'productImageDelete',
     'productImageReorder',
     'productImageUpdate',
-    'locationGeocode',
-    'locationSearch',
-    'Location',
-    'LocationInput',
-    'LocationKindEnum',
-    'LocationTypeEnum',
-    'productLocationCreate',
-    'productLocationDelete',
-    'productLocationUpdate',
-    'productSetLocationType',
     'BulkProductError',
     'ProductFieldEnum',
     'ProductImage',
@@ -285,6 +275,19 @@ module.exports = ({
     'ExportProducts',
     'ExportProductsInput',
     'ExportScope',
+  ];
+
+  const locationsSection = [
+    'locationGeocode',
+    'locationSearch',
+    'Location',
+    'LocationInput',
+    'LocationKindEnum',
+    'LocationTypeEnum',
+    'productLocationCreate',
+    'productLocationDelete',
+    'productLocationUpdate',
+    'productSetLocationType',
   ];
   
   const productTypesSection = [
@@ -1413,6 +1416,7 @@ module.exports = ({
     groupedProductsSection, 
     importAndExportSection, 
     productsSection, 
+    locationsSection,
     productTypesSection, 
     variantsSection, 
     checkoutSection, 
@@ -1794,7 +1798,27 @@ module.exports = ({
               }))
             },
           ]
-        },        
+        },            
+        {
+          name: 'Locations',
+          makeNavSection: true,
+          makeContentSection: true,
+          items: [
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(locationsSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(locationsSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },    
         {
           name: 'Products',
           makeNavSection: true,

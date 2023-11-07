@@ -6,37 +6,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (['Queries', 'Mutations', 'Types', 'Definitions'].includes(content)) {
       // Append the plus sign for expandable items
-      appendExpandSign(el);
+//      appendExpandSign(el);
 
-      const nextUl = el.nextElementSibling;
-      if (nextUl && nextUl.tagName === 'UL') {
+//      const nextUl = el.nextElementSibling;
+//      if (nextUl && nextUl.tagName === 'UL') {
         // Hide the UL initially
-        nextUl.style.display = 'none';
+//        nextUl.style.display = 'none';
 
         // Assign an onclick function to toggle the UL
-        el.addEventListener('click', () => toggleNavItems(nextUl, el));
+ //       el.addEventListener('click', () => toggleNavItems(nextUl, el));
 
         // Add specific class based on content
         addNavItemClass(el, content);
-      }
+      
     }
   });
 });
-
-function toggleNavItems(ul, triggerEl) {
-  const isExpanded = ul.style.display === 'block';
-  // Toggle display and text content, and ARIA attributes for accessibility
-  ul.style.display = isExpanded ? 'none' : 'block';
-  triggerEl.textContent = triggerEl.textContent.replace(isExpanded ? '+' : '-', isExpanded ? '-' : '+');
-  triggerEl.setAttribute('aria-expanded', !isExpanded);
-}
-
-function appendExpandSign(el) {
-  // Only append if not already present
-  if (!el.textContent.includes('+')) {
-    el.textContent += ' +';
-  }
-}
 
 function addNavItemClass(navGroupTitle, content) {
   const classMap = {
@@ -51,3 +36,32 @@ function addNavItemClass(navGroupTitle, content) {
     navGroupTitle.classList.add(className);
   }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll('.copy-icon').forEach(function(element) {
+    element.addEventListener('click', function() {
+      var operationElement = this.closest('.operation');
+      var definitionElement = this.closest('.definition');
+
+      var id;
+      if (operationElement) {
+        id = operationElement.getAttribute('id');
+      } else if (definitionElement) {
+        id = definitionElement.getAttribute('id');
+      }
+
+      if (!id) {
+        // Handle the case when neither '.operation' nor '.definition' is found.
+        console.error("No '.operation' or '.definition' element found.");
+        return;
+      }
+
+      var url = window.location.href.split('#')[0] + '#' + id;
+      navigator.clipboard.writeText(url);
+
+      window.history.replaceState(null, null, '#' + id);
+      document.getElementById(id).scrollIntoView();
+
+    });
+  });
+});

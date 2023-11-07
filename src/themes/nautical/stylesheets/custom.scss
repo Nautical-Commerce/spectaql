@@ -6,7 +6,7 @@ $background-sidebar: #1c1d35;
 $background-examples: #13141e;
 
 $text-color: #D3D3D3;
-$text-color-subtle: #999999;
+$text-color-subtle: #adb2bd;
 
 $link-color: #26B2E3;
 $link-color-hover: #1a9ac8;
@@ -30,7 +30,6 @@ $background-arguments: #3e3e49d4;
 }
 
 .badge {
-  display: b;
   font-size: 0.7rem;   
   padding: 1px 4px;   
   font-weight: bold; 
@@ -105,75 +104,52 @@ th {
 
 #sidebar {
   max-width: 325px;
+  font-size: 0.9em !important;
 
   ul li a {
     line-height: 1.5;
 };
-
-.nav-group-items{
-  padding-left: .75em;
-}
-
  .nav-item {
   font-family: Menlo, Consolas, monospace;
-  font-size: 0.9em;
+  font-size: 0.8rem !important;
+  padding-left: .75em;
  }
+
+ .nav-group-section {
+  margin-bottom: 0;
+ }
+
+ .nav-group-items { 
+  font-size: 0.8rem !important;
+ }
+
+ .nav-group li {
+  margin: 0;
+}
 }
 
 .flex {
   display: inline-flex;
   align-items: center;
 }
-}
 
 .types-nav-item {
   color: #F8BBD0 !important;
   font-size: 0.7rem !important;
   text-transform: lowercase !important;
-  margin-top: -12px !important;
-}
-
-.types-nav-item:hover {
-  color: #fff;
-  cursor: pointer;
+  margin-top: -10px !important;
 }
 
 .query-nav-item {
   color: #A5E0F3 !important;
   font-size: 0.7rem !important;
   text-transform: lowercase !important;
-  margin-top: -12px !important;
+  margin-top: -10px !important;
 }
-
-.query-nav-item:hover {
-  color: #fff;
-  cursor: pointer;
-}
-
 .mutation-nav-item {
   color: #FCD839 !important;
   font-size: 0.7rem !important;
   text-transform: lowercase !important;
-  margin-top: -12px !important;
+  margin-top: -10px !important;
 }
-
-.mutation-nav-item:hover {
-  color: #fff;
-  cursor: pointer;
-}
-
-a {
-  position: relative;
-}
-
-
-a.nav-scroll-active::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -5px; /* This will place the pseudo-element to the left of the anchor tag */
-  height: 100%; 
-  width: 3px; /* Adjust width for desired border thickness */
-  background-color: #26B2E3; /* Change to your desired border color */
-  z-index: -1;
 }

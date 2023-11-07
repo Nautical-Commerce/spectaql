@@ -24,7 +24,7 @@ $size-desktop-large: 64em;
 $font-family: "Inter Tight", sans-serif;
 $font-family-monospaced: Menlo, Consolas, monospace;
 $text-color: #D3D3D3;
-$text-color-subtle: #999999;
+$text-color-subtle: #adb2bd;
 $text-color-dark-subtle: #fefefe;
 $link-color: #0B79B7;
 $link-color-hover: #1468a0;
@@ -235,7 +235,8 @@ $text-color-examples: white;
     background: $background-sidebar;
 
     a {
-      color: $text-color-subtle;
+      color: #adb2bd;
+      font-size: 0.9rem;
     }
 
     a.nav-scroll-active {
