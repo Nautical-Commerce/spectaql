@@ -2,7 +2,7 @@
   {{#if items}}
     <div class="nav-group">
       <{{ itemHeadingTag headingNumber }} class="nav-group-title" {{{ ariaLevel headingNumber }}}>{{name}}</{{ itemHeadingTag headingNumber }}>
-      <ul class="nav-group-items">
+      <ul class="nav-group-items" id="navItems">
         {{#each items}}
           {{#if makeNavSection}}
             {{>layout/nav/section-item headingNumber=(math ../headingNumber "+" 1 )}}
@@ -13,7 +13,6 @@
       </ul>
     </div>
   {{else}}
-    {{#if isQuery}}<li class="query-nav-item">Queries</li>{{else if isMutation}}<li class="mutation-nav-item">Mutations</li>{{else if isSubscription}}<li class="subscription-nav-item">Subscriptions</li>{{/if}}
     <li><a class="nav-item" href="#{{./htmlId}}">{{name}}</a></li>
   {{/if}}
 {{/unless}}

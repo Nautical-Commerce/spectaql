@@ -32,26 +32,106 @@ module.exports = ({
     // option for microfiber via the `src/index.js:introspectionOptionsToMicrofiberOptions()` function
     introspectionOptions?.microfiberOptions,
   )
-
+ 
   const queryType = introspectionManipulator.getQueryType()
   const mutationType = introspectionManipulator.getMutationType()
   const normalTypes = introspectionManipulator.getAllTypes({
     includeQuery: false,
     includeMutation: false,
-    includeSubscription: false,
+    includeSubscription: false
   })
 
+  function getFilteredAndSortedItems(sectionArray) {
+    // Retrieve items from queries, mutations, and types
+    const queryItems = getQueryTypeItems(sectionArray);
+    const mutationItems = getMutationTypeItems(sectionArray);
+    const normalTypeItems = getNormalTypeItems(sectionArray)
+    .map(type => ({
+      ...type,
+      isType: true, // add the isType property
+    }));
+  
+    // Combine all items into one array and sort them
+    const combinedItems = queryItems
+      .concat(mutationItems)
+      .concat(normalTypeItems)
+  
+    // Return the sorted combined items
+    return combinedItems;
+  }
+
+  function getQueryTypeItems(sectionArray) {
+    return queryType.fields
+      .filter((query) => sectionArray.includes(query.name))
+      .map((query) => ({
+        ...query,
+        isQuery: true,
+      }))
+      .sort(sortByName);
+  }
+  
+  function getMutationTypeItems(sectionArray) {
+    return mutationType.fields
+      .filter((mutation) => sectionArray.includes(mutation.name))
+      .map((mutation) => ({
+        ...mutation,
+        isMutation: true,
+      }))
+      .sort(sortByName);
+  }
+
+  function getNormalTypeItems(sectionArray) {
+    const suffixes = [
+      'countableconnection',
+      'countableedge',
+      'type',
+      'input',
+      'inputtypeenum',
+      'filterinput',
+      'filterconnector',
+      'status',
+      'statusenum',
+      'error',
+      'errorcode',
+      'sortinginput',
+      'sortinput',
+      'sortfield',
+      'enum',
+      'typeenum'
+    ];
+  
+    return normalTypes
+      .filter((type) => {
+        const baseNameLowerCase = type.name.toLowerCase();
+        return sectionArray.some((sectionItem) => {
+          const sectionItemLowerCase = sectionItem.toLowerCase();
+          // Check for direct match or match with any additional suffixes
+          // Use the lowercase variables for comparison only
+          return baseNameLowerCase === sectionItemLowerCase || 
+                 suffixes.some(suffix => baseNameLowerCase === `${sectionItemLowerCase}${suffix}`);
+        });
+      })
+      // Ensure that we're sorting based on the original case
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }  
+
+  
   //define arrays for each section
   const appTokenSection = [
     'appTokenCreate',
     'appTokenDelete',
     'appTokenVerify',
+    'appToken',
   ];
   const userTokenSection = [
     'tokenCreate',
     'tokensDeactivateAll',
     'tokenRefresh',
     'tokenVerify',
+    'CreateToken',
+    'RefreshToken',
+    'DeactivateAllUserTokens',
+    'VerifyToken'
   ];
   const attributesSection = [
     'attribute',
@@ -61,15 +141,17 @@ module.exports = ({
     'attributeCreate',
     'attributeDelete',
     'attributeUnassign',
-    'attributeUpdate'
-  ];  
-  const attributeValuesSection = [
+    'attributeUpdate',
+    'attributeValue',
+    'attributeType',
     'attributeValueBulkCreate',
     'attributeValueBulkDelete',
     'attributeValueCreate',
     'attributeValueDelete',
     'attributeValueUpdate',
-    'attributeValuesReorder'
+    'attributeValuesReorder',
+    'AttributeReorderValues',
+    'SelectedAttribute',
   ];  
 
   const categoriesSection = [
@@ -95,6 +177,7 @@ module.exports = ({
     'collectionRemoveProducts',
     'collectionRemoveVariants',
     'collectionUpdate',
+    'collectionPublished',
     'homepageCollectionUpdate'
   ];
   
@@ -104,7 +187,9 @@ module.exports = ({
     'digitalContentCreate',
     'digitalContentDelete',
     'digitalContentUpdate',
-    'digitalContentUrlCreate'
+    'digitalContentUrlCreate',
+    'DigitalContentUrl',
+    'DigitalContentUploadInput'
   ];
   
   const featuresSection = [
@@ -113,7 +198,21 @@ module.exports = ({
     'featureDelete',
     'productTypeFeatureCreate',
     'productTypeFeatureDelete',
-    'productTypeFeatureUpdate'
+    'productTypeFeatureUpdate',
+    'feature',
+    'FeatureFilterConnector',
+    'FeatureFilterOperation',
+    'FeatureFilterOperationCondition',
+    'featuretype',
+    'VariantFeature',
+    'VariantFeatureCountableConnection',
+    'VariantFeatureCountable',
+    'ProductTypeFeatureInput',
+    'ProductTypeProductFeature',
+    'ProductTypeVariantFeature',
+    'ProductFeature',
+    'ProductFeatureCountableConnection',
+    'ProductFeatureCountableEdge',
   ];
   
   const groupedProductsSection = [
@@ -126,9 +225,19 @@ module.exports = ({
     'catalogImportProcess',
     'catalogImportProcesses',
     'catalogImport',
+    'CatalogImportOperation',
+    'CatalogImportProcessLogRecord',
+    'CatalogImportProcessLogRecordOperation',
+    'CatalogImportProcessStatus',
     'exportFile',
     'exportFiles',
-    'catalogExport'
+    'ExportCatalog',
+    'catalogExport',
+    'ImportCatalog',
+    'ImportError',
+    'ImportEvent',
+    'ImportEventsEnum',
+    'ImportFile',
   ];
   
   const productsSection = [
@@ -151,10 +260,31 @@ module.exports = ({
     'productImageUpdate',
     'locationGeocode',
     'locationSearch',
+    'Location',
+    'LocationInput',
+    'LocationKindEnum',
+    'LocationTypeEnum',
     'productLocationCreate',
     'productLocationDelete',
     'productLocationUpdate',
-    'productSetLocationType'
+    'productSetLocationType',
+    'BulkProductError',
+    'ProductFieldEnum',
+    'ProductImage',
+    'ProductImageCountableConnection',
+    'ProductImageCountableEdge',
+    'ProductOrder',
+    'ProductOrderField',
+    'ProductPricingInfo',
+    'ProductSearchFieldEnum',
+    'ProductSearchInput',
+    'ProductStockFilterInput',
+    'ProductSubStatus',
+    'ProductSubStatusEnum',
+    'ProductAction',
+    'ExportProducts',
+    'ExportProductsInput',
+    'ExportScope',
   ];
   
   const productTypesSection = [
@@ -177,7 +307,21 @@ module.exports = ({
     'productVariantUpdate',
     'productVariantSetDefault',
     'productVariantImageAssign',
-    'productVariantImageUnassign'
+    'productVariantImageUnassign',
+    'VariantImageAssign',
+    'VariantImageUnassign',
+    'VariantPricingInfo',
+    'VariantSize',
+    'VariantSizeInput',
+    'VariantSortField',
+    'VariantSortingInput',
+    'VariantUniquenessEnum',
+    'ProductVariantReorder',
+    'ProductVariantReportType',
+    'ProductVariantSearchFieldEnum',
+    'ProductVariantSearchInput',
+    'ProductVariantSubStatus',
+    'ProductVariantSubStatusEnum',
   ];  
 
   const checkoutSection = [
@@ -194,6 +338,7 @@ module.exports = ({
     'checkoutNoteUpdate',
     'checkoutSetTransactionCurrency',
     'checkoutShippingAddressUpdate',
+    'CheckoutShippingMethodUpdate',
     'checkoutLine',
     'checkoutLines',
     'checkoutLinesAdd',
@@ -205,24 +350,34 @@ module.exports = ({
     'checkoutSellerShippingMethodsClear',
     'checkoutSellerShippingMethodsUpdate',
     'checkoutAddPromoCode',
-    'checkoutRemovePromoCode'
+    'checkoutRemovePromoCode',
+    'MultiSellerShippingMethod',
   ];
   const creditLimitsSection = [
     'creditLimit',
     'creditLimits',
-    'userCreditLimitUpdate'
+    'userCreditLimitUpdate',
+    'CreditLimitUpdate',
   ];
   const customersSection = [
+    'customer',
+    'customerEvent',
+    'customerEvents',
     'customers',
     'customerBulkDelete',
     'customerCreate',
     'customerDelete',
     'customerUpdate',
-    'customersExport'
+    'customersExport',
+    'customerFilterInput',
+    'CustomerOrderStatusFilter',
+    'CustomerOrder',
+    'ExportCustomers',
   ];
   const currencySection = [
     'currencies',
-    'exchangeRatesRefresh'
+    'exchangeRatesRefresh',
+    'NauticalCurrency',
   ];
   const fulfillmentSection = [
     'orderDeclineFulfillment',
@@ -230,7 +385,16 @@ module.exports = ({
     'orderFulfillmentCancel',
     'orderFulfillmentCreateLabel',
     'orderFulfillmentUpdateTracking',
-    'orderMarkAsDelivered'
+    'orderMarkAsDelivered',
+    'Fulfillment',
+    'FulfillmentCancel',
+    'FulfillmentCreateLabel',
+    'FulfillmentLine',
+    'TrackingNumbers',
+    'FulfillmentStatusFilter',
+    'DeclineFulfillInput',
+    'DeclineFulfillLineInput',
+    'DeclineFulfillStockInput',
   ];
   const invoicesSection = [
     'invoiceCreate',
@@ -238,7 +402,66 @@ module.exports = ({
     'invoiceRequest',
     'invoiceRequestDelete',
     'invoiceSendNotification',
-    'invoiceUpdate'
+    'invoiceUpdate',
+    'UpdateInvoiceInput',
+    'Invoice',
+    'InvoiceError',
+    'InvoiceErrorCode'
+  ];
+  const offersSection = [
+    'bidAccept',
+    'bidCreate',
+    'bidReject',
+    'OfferOrderSubStatusFilter',
+    'AcceptBid',
+    'Bid',
+    'BidError',
+    'BidErrorCode',
+    'BidInput',
+    'BidRole',
+    'BidRoleEnum',
+    'BidStatus',
+    'RejectBid'
+  ];
+  const quotesSection = [
+    'quoteOrders',
+    'nauticalQuoteOrders',
+    'SendQuoteToCustomer',
+    'QuoteOrderSubStatusFilter',
+    'OrderQuoteFilterInput',
+    'nauticalQuoteOrderByToken',
+    'nauticalQuoteOrderCancel',
+    'nauticalQuoteOrderSendToCustomer',
+  ];
+  const draftsSection = [
+    'draftOrders',
+    'nauticalDraftOrders',
+    'DraftOrderInitialStatus',
+    'DraftOrderInput',
+    'draftOrderBulkDelete',
+    'draftOrderComplete',
+    'draftOrderCreate',
+    'draftOrderDelete',
+    'draftOrderLineDelete',
+    'draftOrderLinePriceOverride',
+    'draftOrderLineUpdate',
+    'draftOrderLinesBulkDelete',
+    'draftOrderLinesCreate',
+    'draftOrderSetTransactionCurrency',
+    'draftOrderUpdate',
+    'nauticalDraftOrderBulkDelete',
+    'nauticalDraftOrderComplete',
+    'nauticalDraftOrderCreate',
+    'nauticalDraftOrderDelete',
+    'nauticalDraftOrderLineDelete',
+    'nauticalDraftOrderLinePriceOverride',
+    'nauticalDraftOrderLineUpdate',
+    'nauticalDraftOrderLinesBulkDelete',
+    'nauticalDraftOrderLinesCreate',
+    'nauticalDraftOrderSetTransactionCurrency',
+    'nauticalDraftOrderUpdate',
+    'NauticalOrderDraftFilterInput',
+    'OrderDraftFilterInput',
   ];
   const ordersSection = [
     'nauticalOrders',
@@ -250,11 +473,6 @@ module.exports = ({
     'orderByToken',
     'orders',
     'ordersTotal',
-    'draftOrders',
-    'nauticalDraftOrders',
-    'quoteOrders',
-    'nauticalQuoteOrders',
-    'nauticalQuoteOrderByToken',
     'nauticalOrderAddNote',
     'nauticalOrderUpdateApplyVoucherCode',
     'nauticalOrderUpdateDeleteDiscount',
@@ -283,34 +501,46 @@ module.exports = ({
     'orderUpdate',
     'orderVoid',
     'ordersMapToNauticalOrder',
-    'draftOrderBulkDelete',
-    'draftOrderComplete',
-    'draftOrderCreate',
-    'draftOrderDelete',
-    'draftOrderLineDelete',
-    'draftOrderLinePriceOverride',
-    'draftOrderLineUpdate',
-    'draftOrderLinesBulkDelete',
-    'draftOrderLinesCreate',
-    'draftOrderSetTransactionCurrency',
-    'draftOrderUpdate',
-    'nauticalDraftOrderBulkDelete',
-    'nauticalDraftOrderComplete',
-    'nauticalDraftOrderCreate',
-    'nauticalDraftOrderDelete',
-    'nauticalDraftOrderLineDelete',
-    'nauticalDraftOrderLinePriceOverride',
-    'nauticalDraftOrderLineUpdate',
-    'nauticalDraftOrderLinesBulkDelete',
-    'nauticalDraftOrderLinesCreate',
-    'nauticalDraftOrderSetTransactionCurrency',
-    'nauticalDraftOrderUpdate',
-    'nauticalQuoteOrderCancel',
-    'nauticalQuoteOrderSendToCustomer',
-    'bidAccept',
-    'bidCreate',
-    'bidReject',
-    'orderOfferConvertToNauticalQuoteOrder'
+    'MapOrdersToNauticalOrder',
+    'NauticalOrderEvent',
+    'NauticalOrderEventCountableConnection',
+    'NauticalOrderEventCountableEdge',
+    'NauticalOrderEventOrderLineObject',
+    'NauticalOrderLine',
+    'NauticalOrderOrderSource',
+    'NauticalOrderQuoteFilterInput',
+    'NauticalOrderSubStatus',
+    'NauticalSecondaryOrderLine',
+    'NauticalSubOrder',
+    'orderOfferConvertToNauticalQuoteOrder',
+    'OrderAction',
+    'OrderAffiliateSummaryType',
+    'OrderDirection',
+    'OrderEvent',
+    'OrderEventCountableConnection',
+    'OrderEventCountableEdge',
+    'OrderEventOrderLineObject',
+    'OrderEventsEmailsEnum',
+    'OrderEventsEnum',
+    'OrderFee',
+    'OrderFeeInput',
+    'OrderFulfillLineInput',
+    'OrderFulfillStockInput',
+    'OrderLine',
+    'OrderLineCreateInput',
+    'OrderLineInput',
+    'OrderLinePriceOverrideInput',
+    'OrderOrderSource',
+    'OrderPayoutStatusEnum',
+    'OrderSellerSummaryType',
+    'OrderSourceFilter',
+    'OrderStatusFilter',
+    'OrderSubStatus',
+    'OrderSubStatusEnum',
+    'OrderSummaryDeltaDataType',
+    'OrderVendorSummaryType',
+    'FeeScope',
+    'SecondaryOrderLine',
   ];
   const paymentsSection = [
     'payment',
@@ -318,7 +548,15 @@ module.exports = ({
     'getClientSecret',
     'paymentCapture',
     'paymentRefund',
-    'paymentVoid'
+    'paymentVoid',
+    'CreditCard',
+    'Transaction',
+    'TransactionError',
+    'TransactionKind',
+    'StripeClientPaymentData',
+    'PaymentChargeStatusEnum',
+    'PaymentGateway',
+    'PaymentSource',
   ];
   
   const refundsSection = [
@@ -333,17 +571,48 @@ module.exports = ({
     'refundLinesUpdate',
     'refundPaymentsAdd',
     'refundPaymentsDelete',
-    'refundPaymentsUpdate'
+    'refundPaymentsUpdate',
+    'RefundBulkDelete',
+    'RefundChargeToEnum',
+    'RefundLine',
+    'RefundLineBulkDelete',
+    'RefundLineCountableConnection',
+    'RefundLineCountableEdge',
+    'RefundLineInput',
+    'RefundLineScopeEnum',
+    'RefundLineTypeEnum',
+    'RefundLineUpdateInput',
+    'RefundMethod',
+    'RefundPayment',
+    'RefundPaymentCountableConnection',
+    'RefundPaymentCountableEdge',
+    'RefundPaymentInput',
+    'RefundPaymentTypeEnum',
+    'RefundPaymentUpdateInput',
+    'RefundScope',
   ];
   
   const returnsSection = [
     'returns',
     'fulfillmentBulkReturn',
+    'BulkFulfillmentReturn',
+    'BulkFulfillmentReturnInput',
     'nauticalOrderReturnFromStorefrontNotification',
     'nauticalOrderReturnNotification',
     'orderFulfillmentReturn',
     'orderReturnNotification',
-    'vendorOrderReturnFromStorefrontNotification'
+    'vendorOrderReturnFromStorefrontNotification',
+    'FulfillmentReturn',
+    'FulfillmentReturnStatusBulkUpdate',
+    'FulfillmentUpdateReturnStatus',
+    'FulfillmentUpdateTracking',
+    'ReturnFulfillmentFilterInput',
+    'ReturnFulfillmentSortField',
+    'ReturnFulfillmentSortingIn',
+    'NauticalFulfillment',
+    'NauticalFulfillmentLine',
+    'NauticalFulfillmentStatus',
+    'ReturnFulfillmentSortingInput',
   ];
   
   const taxesSection = [
@@ -351,11 +620,34 @@ module.exports = ({
     'customerTaxCertificates',
     'taxExemptCodes',
     'taxTypes',
-    'nauticalOrderRefreshTaxes'
+    'nauticalOrderRefreshTaxes',
+    'TaxCertificate',
+    'TaxExemptCode',
+    'TaxRateType',
+    'TaxType',
+    'TaxedMoney',
+    'TaxedMoneyRange',
+    'ShopFetchTaxRates',
+    'VAT',
+    'AvalaraRequestLog',
+    'AvalaraRequestLogCountableConnection',
+    'AvalaraRequestLogCountableEdge',
   ];
   
   const wishlistSection = [
+    'wishlist',
+    'WishlistAddProductMutation',
+    'WishlistAddProductVariantMutation',
+    'WishlistBuyerInput',
+    'WishlistCountableConnection',
+    'WishlistCountableEdge',
+    'WishlistError',
+    'WishlistItem',
+    'WishlistItemSortingInput',
+    'WishlistErrorCode',
     'wishlistItemsByName',
+    'WishlistRemoveProductMutation',
+    'WishlistRemoveProductVariantMutation',
     'wishlistAddProduct',
     'wishlistAddVariant',
     'wishlistCreateForBuyer',
@@ -365,7 +657,9 @@ module.exports = ({
     'wishlistRemoveProduct',
     'wishlistRemoveVariant',
     'wishlistSetDefault',
-    'wishlistUpdate'
+    'wishlistUpdate',
+    'WishlistItemInputFilter',
+    'SetDefaultWishlist',
   ];  
   const affiliatesSection = [
     'affiliate',
@@ -375,12 +669,18 @@ module.exports = ({
     'affiliateDelete',
     'affiliateAvatarUpdate',
     'affiliateBulkDelete',
+    'affiliateCode',
     'affiliateCodes',
     'affiliateCodeCreate',
     'affiliateCodeSetActive',
     'affiliateCodeBulkSetActive',
     'affiliateCodeUse',
-    'affiliateCodeChannelUpdate'
+    'affiliateCodeChannelUpdate',
+    'AffiliateCodeFilterInput',
+    'AffiliateCodeSortField',
+    'AffiliateCodeSortingInput',
+    'OptimizedAffiliate',
+    'OptimizedAffiliateChannel'
   ];
   
   const agreementsSection = [
@@ -394,7 +694,22 @@ module.exports = ({
     'agreementDelete',
     'agreementFeeCreate',
     'agreementFeeDelete',
-    'agreementUpdate'
+    'agreementUpdate',
+    'AgreementAgreementType',
+    'AgreementCommission',
+    'AgreementCommissionType',
+    'AgreementFee',
+    'AgreementFees',
+    'AgreementGranularCommission',
+    'AgreementMarkupCommission',
+    'AgreementOrder',
+    'AgreementSellers',
+    'AgreementVendorType',
+    'commission',
+    'DeeScope',
+    'FeeType',
+    'MarkupCommissionTypeEnum',
+    'CommissionTypeEnum',
   ];
   
   const payoutsSection = [
@@ -406,6 +721,7 @@ module.exports = ({
     'payoutDatesUpdate',
     'payoutStatusUpdate',
     'payoutUpdate',
+    'GetPayoutOnboardingLink',
     'vendorPayout',
     'vendorPayoutList',
     'vendorPayouts',
@@ -415,7 +731,22 @@ module.exports = ({
     'vendorPayoutStatusUpdate',
     'vendorPayoutsBulkExclude',
     'vendorPayoutsBulkInclude',
-    'vendorPayoutsBulkProcess'
+    'vendorPayoutsBulkProcess',
+    'VendorPayoutAddNoteInput',
+    'VendorPayoutDetails',
+    'VendorPayoutEvent',
+    'VendorPayoutEventsEnum',
+    'VendorPayoutReport',
+    'VendorPayoutReportSubset',
+    'VendorPayoutStatusInput',
+    'VendorPayoutUpdateInput',
+    'VendorPayoutUpdateNoteInput',
+    'VendorTypeEnum',
+    'PayoutDatesInput',
+    'PayoutStatusFilter',
+    'PayoutStatusInput',
+    'PayoutVendorType',
+    'UserExternalPayoutSource',
   ];
   
   const sellersSection = [
@@ -436,16 +767,44 @@ module.exports = ({
     'sellerAddressSetDefault',
     'sellerAddressUpdate',
     'sellerAgreementAcknowledge',
+    'AcknowledgeSellerAgreement',
     'sellerDataCreate',
     'sellerDataUpdate',
     'sellerLogoUpdate',
     'sellerNoteCreate',
     'sellerOnboardingChecklistComplete',
+    'DefaultSellerChecklist',
+    'DefaultSellerChecklistInput',
     'sellerOwnerDelete',
     'sellerSettingsUpdate',
     'sellerShellCreate',
     'sellerUserMappingCreate',
-    'sellerWithOwnerCreate'
+    'sellerWithOwnerCreate',
+    'Vendor',
+    'UpdateSellerData',
+    'UpdateSellerSettings',
+    'CreateSellerData',
+    'CreateSellerNote',
+    'CreateSellerShell',
+    'CreateSellerUserMapping',
+    'SellerCards',
+    'SellerChecklistCompetitionTriggersEnum',
+    'SellerChecklistInput',
+    'SellerEventType',
+    'SellerEventTypeCountableConnection',
+    'SellerEventTypeCountableEdge',
+    'SellerExternalPayoutSource',
+    'SellerNoteInput',
+    'SellerOnboardingChecklist',
+    'SellerOnboardingChecklistError',
+    'SellerOnboardingChecklistErrorCode',
+    'SellerOwnerCreateInput',
+    'SellerShippingMethodInput',
+    'SellerStatusFilter',
+    'SellerUpdateInput',
+    'SellerUserTypeCountableConnection',
+    'SellerUserTypeCountableEdge',
+    'DetailedSellerInput',
   ];  
   const shippingZonesSection = [
     'shippingZone',
@@ -457,21 +816,35 @@ module.exports = ({
     'shippingPriceBulkDelete',
     'shippingPriceCreate',
     'shippingPriceDelete',
-    'shippingPriceUpdate'
+    'shippingPriceUpdate',
+    'ShippingMethod',
+    'ShippingMethodTypeEnum',
+    'ShippingPriceInput',
+    'ShippingError',
+    'ShippingErrorCode',
+
   ];
   const stocksSection = [
     'stock',
     'stocks',
     'productVariantStocksCreate',
     'productVariantStocksDelete',
-    'productVariantStocksUpdate'
+    'productVariantStocksUpdate',
+    'BulkStockError',
+    'StockEvent',
+    'Allocation',
+    'StockEventType',
+    'StockAvailability'
   ];
   const warehousesSection = [
     'warehouse',
     'warehouses',
     'warehouseCreate',
     'warehouseDelete',
-    'warehouseUpdate'
+    'warehouseUpdate',
+    'WarehouseAddressInput',
+    'WarehouseStats',
+
   ];
   const priceBooksSection = [
     'priceBook',
@@ -479,41 +852,74 @@ module.exports = ({
     'priceBookBulkDelete',
     'priceBookCreate',
     'priceBookDelete',
-    'priceBookUpdate'
-  ];
-  const priceBookProductTypesSection = [
+    'priceBookUpdate',
     'priceBookProductTypes',
     'priceBookProductTypesHistory',
     'priceBookProductTypeBulkDelete',
     'priceBookProductTypeCreate',
     'priceBookProductTypeDelete',
-    'priceBookProductTypeUpdate'
-  ];
-  const priceBookProductsSection = [
+    'priceBookProductTypeUpdate',
     'priceBookProducts',
     'priceBookProductsHistory',
     'priceBookProductUpdate',
     'priceBookProductBulkDelete',
     'priceBookProductCreate',
     'priceBookProductDelete',
-  ];
-  const priceBookVariantsSection = [
     'priceBookVariants',
     'priceBookVariantsHistory',
     'priceBookVariantBulkDelete',
     'priceBookVariantCreate',
     'priceBookVariantDelete',
     'priceBookVariantUpdate',
-  ];
-  const priceBookUsersSection = [
     'priceBookUsers',
     'userAddToPriceBook',
     'userRemoveFromPriceBook',
-  ];
-  const priceBookBusinessEntitiesSection = [
     'priceBookEntities',
     'businessEntityAddToPriceBook',
-    'businessEntityRemoveFromPriceBook'
+    'businessEntityRemoveFromPriceBook',
+    'PriceBookProduct',
+    'PriceBookProductCountableConnection',
+    'PriceBookProductCountableEdge',
+    'PriceBookProductFilterInput',
+    'PriceBookProductHistory',
+    'PriceBookProductHistoryCountableConnection',
+    'PriceBookProductHistoryCountableEdge',
+    'PriceBookProductHistoryFilterInput',
+    'PriceBookProductHistorySortField',
+    'PriceBookProductHistorySortingInput',
+    'PriceBookProductHistoryValueType',
+    'PriceBookProductSortField',
+    'PriceBookProductSortingInput',
+    'PriceBookProductType',
+    'PriceBookProductTypeCountableConnection',
+    'PriceBookProductTypeCountableEdge',
+    'PriceBookProductTypeFilterInput',
+    'PriceBookProductTypeHistory',
+    'PriceBookProductTypeHistoryCountableConnection',
+    'PriceBookProductTypeHistoryCountableEdge',
+    'PriceBookProductTypeHistoryFilterInput',
+    'PriceBookProductTypeHistorySortField',
+    'PriceBookProductTypeHistorySortingInput',
+    'PriceBookProductTypeHistoryValueType',
+    'PriceBookProductTypeSortField',
+    'PriceBookProductTypeSortingInput',
+    'PriceBookProductTypeValueType',
+    'PriceBookProductValueType',
+    'PriceBookValueTypeEnum',
+    'PriceBookVariant',
+    'PriceBookVariantCountableConnection',
+    'PriceBookVariantCountableEdge',
+    'PriceBookVariantFilterInput',
+    'PriceBookVariantHistory',
+    'PriceBookVariantHistoryCountableConnection',
+    'PriceBookVariantHistoryCountableEdge',
+    'PriceBookVariantHistoryFilterInput',
+    'PriceBookVariantHistorySortField',
+    'PriceBookVariantHistorySortingInput',
+    'PriceBookVariantHistoryValueType',
+    'PriceBookVariantSortField',
+    'PriceBookVariantSortingInput',
+    'PriceBookVariantValueType',
   ];
   const salesSection = [
     'sale',
@@ -523,7 +929,23 @@ module.exports = ({
     'saleCataloguesRemove',
     'saleCreate',
     'saleDelete',
-    'saleUpdate'
+    'saleUpdate',
+    'Sale',
+    'SaleAddCatalogues',
+    'SaleBulkDelete',
+    'SaleCountableConnection',
+    'SaleCountableEdge',
+    'SaleCreate',
+    'SaleDelete',
+    'SaleFilterInput',
+    'SaleInput',
+    'SaleRemoveCatalogues',
+    'SaleSortField',
+    'SaleSortingInput',
+    'SaleTranslatableContent',
+    'SaleTranslation',
+    'SaleType',
+    'SaleUpdate',
   ];
   const vouchersSection = [
     'voucher',
@@ -533,7 +955,28 @@ module.exports = ({
     'voucherCataloguesRemove',
     'voucherCreate',
     'voucherDelete',
-    'voucherUpdate'
+    'voucherUpdate',
+    'voucherType',
+    'Voucher',
+    'VoucherAddCatalogues',
+    'VoucherBulkDelete',
+    'VoucherCountableConnection',
+    'VoucherCountableEdge',
+    'VoucherCreate',
+    'VoucherDelete',
+    'VoucherDiscountType',
+    'VoucherFilterInput',
+    'VoucherInput',
+    'VoucherRemoveCatalogues',
+    'VoucherSortField',
+    'VoucherSortingInput',
+    'VoucherTypeEnum',
+    'VoucherUpdate',
+    'discount',
+    'discounterror',
+    'discounterrorcode',
+    'discountstatus',
+    'DiscountValueTypeEnum',
   ];
   const addressSection = [
     'address',
@@ -541,14 +984,28 @@ module.exports = ({
     'addressCreate',
     'addressDelete',
     'addressSetDefault',
-    'addressUpdate'
+    'addressUpdate',
+    'AddressTypeEnum',
+    'AddressValidationData',
   ];
   const permissionGroupsSection = [
     'permissionGroup',
     'permissionGroups',
     'permissionGroupCreate',
     'permissionGroupDelete',
-    'permissionGroupUpdate'
+    'permissionGroupUpdate',
+    'Permission',
+    'PermissionEnum',
+    'PermissionGroupCreate',
+    'PermissionGroupCreateInput',
+    'PermissionGroupDelete',
+    'PermissionGroupError',
+    'PermissionGroupErrorCode',
+    'PermissionGroupFilterInput',
+    'PermissionGroupSortField',
+    'PermissionGroupSortingInput',
+    'PermissionGroupUpdate',
+    'PermissionGroupUpdateInput',
   ];
   const usersSection = [
     'me',
@@ -560,6 +1017,7 @@ module.exports = ({
     'accountAddressSetDefault',
     'accountAddressUpdate',
     'accountConfirm',
+    'ConfirmAccount',
     'accountDelete',
     'accountRegister',
     'accountRequestDeletion',
@@ -568,25 +1026,35 @@ module.exports = ({
     'userAvatarDelete',
     'userAvatarUpdate',
     'userBulkSetActive',
+    'accountError',
+    'accountErrorCode',
+    'accountInput',
+    'AccountSetDefaultAddress',
+    'UserPermission',
+    'UserCreateInput'
   ];
   const staffSection = [
     'staffUsers',
     'staffBulkDelete',
     'staffCreate',
     'staffDelete',
-    'staffNotificationRecipientCreate',
-    'staffNotificationRecipientUpdate',
-    'staffNotificationRecipientDelete',
     'staffUpdate',
+    'StaffError',
+    'StaffMemberStatus',
+    'StaffUserInput'
   ];
   const emailSection = [
     'emailChangeConfirm',
     'emailChangeRequest',
+    'ConfirmEmailChange',
+    'RequestEmailChange',
   ];
   const passwordSection = [
     'passwordChange',
     'passwordRequestReset',
-    'passwordSet'
+    'passwordSet',
+    'SetPassword',
+    'RequestPasswordReset',
   ];
   const appsSection = [
     'app',
@@ -601,16 +1069,54 @@ module.exports = ({
     'appInstall',
     'appRetryInstall',
     'appUpdate',
-  ];
-  const typeformSection = [
+    'appType',
+    'AppInstallation',
+    'NauticalAppsFilterInput',
+    'NauticalAppsType',
+    'NauticalAppsTypeCountableConnection',
+    'NauticalAppsTypeCountableEdge',
+    'Manifest',
+    //Typeform
     'typeformForm',
-    'typeformForms'
+    'typeformForms',
+    'TypeformFormAttachment',
+    'TypeformFormFields',
+    'TypeformFormLayout',
+    'TypeformFormOption',
+    'TypeformFormProperties',
+    'TypeformFormsItem',
+    'TypeformFormsItemLink',
+    'TypeformFormsItemSelf',
+    'TypeformGroupProperties',
+    //Yotpo
+    'YotpoCustomer',
+    'YotpoLoyaltyAndReferralsAwardCustomerLoyaltyPoints',
+    'YotpoLoyaltyAndReferralsCreateOrUpdateCustomerRecord',
+    //Shopify or Woo
+    'SyncConfiguration',
+    'SyncConfigurationDirection',
+    //shipping
+    'DetailedPricing',
+    'CarrierRates',
+    'Pdf',
+    'ShippingLabel',
+    'Zpl',
   ];
   const metadataSection = [
     'metadataDelete',
     'metadataUpdate',
     'privateMetadataUpdate',
-    'privateMetadataDelete'
+    'privateMetadataDelete',
+    'UpdateMetadata',
+    'UpdatePrivateMetadata',
+    'DeleteMetadata',
+    'DeletePrivateMetadata',
+    'MetadataError',
+    'MetadataErrorCode',
+    'MetadataFilterInput',
+    'MetadataInput',
+    'MetadataItem',
+    'ObjectWithMetadata',
   ];
   const pluginsSection = [
     'plugin',
@@ -620,7 +1126,14 @@ module.exports = ({
     'pluginFlowDelete',
     'pluginFlowUpdate',
     'pluginSyncUpdate',
-    'pluginUpdate'
+    'pluginUpdate',
+    'Flow',
+    'FlowProcess',
+    'PluginConfigurationCategory',
+    'PluginConfigurationPaymentType',
+    'PluginConfigurationRating',
+    'PluginConfigurationSubcategory',
+    'PluginFlowInput',
   ];
   const webhooksSection = [
     'webhook',
@@ -631,15 +1144,27 @@ module.exports = ({
     'webhookCreate',
     'webhookUpdate',
     'webhookDelete',
+    'WebhookEvent',
+    'WebhookEventType',
+    'WebhookEventLog',
+    'GenericWebhookTransactionType',
     'periodicTask',
-    'updatePeriodicTaskEnabled'
+    'WebhookSampleEventType',
+    'webhookJob',
+    'WebhookDirection',
+    'WebhookJobSource',
+    'WebhookJobStatus',
+    'WebhookPeriodicTask',
+    'updatePeriodicTaskEnabled',
+    'PeriodicTaskEnabledUpdate',
   ];
   const businessEntitiesSection = [
     'businessEntity',
     'businessEntities',
     'businessEntityCreate',
     'businessEntityUpdate',
-    'businessEntityDelete'
+    'businessEntityDelete',
+    'BusinessEntityExternalPayoutSource',
   ];
   const configurationSection = [
     'marketplaceConfiguration',
@@ -654,36 +1179,70 @@ module.exports = ({
     'shopSettingsUpdate'
   ];
   const documentsSection = [
+    'document',
+    'DocumentTargetInstance',
     'documentAdd',
     'documentAttach',
     'documentUpdate',
     'documentRemove'
   ];
-  const insightsPayoutsSection = [
+  const insightsSection = [
     'insightsMarketplaceAffiliatePayoutsSummary',
     'insightsMarketplacePayoutsSummary',
-  ];
-  const insightsOrdersSection = [
     'insightsOrdersMarketplaceSummary',
     'insightsOrdersCustomerSummary',
     'insightsOrdersSellerSummary',
-  ];
-    const insightsSalesSection = [
     'insightsMarketplacePaymentsSummary',
     'insightsTopPerformingProducts',
     'insightsTopPerformingCategories',
     'reportProductSales',
-  ];
-    const insightsTaxSection = [
     'insightsMarketplaceTaxSummary',
     'insightsMarketplaceTaxesByCountry',
-    'insightsMarketplaceTaxesByCountryArea'
+    'insightsMarketplaceTaxesByCountryArea',
+    'AbstractOrderSellerReportType',
+    'AbstractPercentReportType',
+    'AbstractProductVariantType',
+    'AbstractPaymentsType',
+    'MarketplaceTaxReportByLocaleType',
+    'OrderAffiliateReportType',
+    'OrderCustomerReportType',
+    'OrderMarketplaceReportType',
+    'OrderSellerReportType',
+    'OrderVendorReportType',
+    'InReportMarketplaceAffiliatePayoutsSummaryType',
+    'InReportMarketplacePaymentsSummaryType',
+    'InReportMarketplacePayoutsSummaryType',
+    'InReportMarketplaceTaxSummaryType',
+    'InReportMarketplaceTaxesByCountryType',
+    'InReportOrderCustomerSummaryType',
+    'InReportOrderMarketplaceSummaryType',
+    'InReportOrderSellerSummaryType',
+    'InReportTopPerformingCategoriesType',
+    'InReportTopPerformingProductsType',
+    'InsightDimensionEnum',
+    'MarketplaceTaxReportByLocaleType',
+    'MarketplaceTaxReportType',
+    'PaymentsDayReportType',
+    'SingleVendorReportType',
+    'SingleVendorSummaryType',
+    'SingleVendorPayoutReport',
+    'ReportingPeriod',
+    'ProductCategoryReportType'
   ];
-  const logsSection = [
-    'emailLogs'
+  const emailNotificationsSection = [
+    'emailLogs',
+    'EmailEvent',
+    'EmailEventMessageType',
+    'staffNotificationRecipientCreate',
+    'staffNotificationRecipientDelete',
+    'staffNotificationRecipientUpdate',
+    'StaffNotificationRecipient',
+    'StaffNotificationRecipientInput',
+    'NotifyEventTypeEnum',
   ];
   const channelsSection = [
     'channels',
+    'channel',
     'channelCreate',
     'channelUpdate'
   ];
@@ -693,7 +1252,12 @@ module.exports = ({
     'conversationMessageAdd',
     'conversationParticipantAdd',
     'conversationParticipantRemove',
-    'conversationUpdate'
+    'conversationUpdate',
+    'ConversationMessage',
+    'ConversationMessageCountableConnection',
+    'ConversationMessageCountableEdge',
+    'ConversationMessageInput',
+    'ConversationParticipantInput',
   ];
   const menusSection = [
     'menu',
@@ -717,7 +1281,8 @@ module.exports = ({
     'mentionNode',
     'mentionsByReceiver',
     'mentionsBySender',
-    'mentionCreate'
+    'mentionCreate',
+    'CreateMention',
   ];
   const micrositesSection = [
     'microsite',
@@ -730,7 +1295,9 @@ module.exports = ({
     'micrositeDelete',
     'micrositeRemoveProducts',
     'micrositeReorderProducts',
-    'micrositeUpdate'
+    'micrositeUpdate',
+    'MicrositePublished',
+    'MicrositeVendorType'
   ];
   const pagesSection = [
     'page',
@@ -745,46 +1312,253 @@ module.exports = ({
     'sites',
     'siteBulkDelete',
     'siteCreate',
-    'siteUpdate'
+    'siteUpdate',
+    `SiteDomainInput`,
+    `SiteError`,
+    `SiteErrorCode`,
+    `SiteFilterInput`,
+    `SiteInput`,
+    `SitePublished`,
+    `SiteSortField`,
+    `SiteSortingInput`
   ];
   const translationsSection = [
     'translation',
     'translations',
+    'NameTranslationInput',
+    'TranslatableItem',
+    'TranslatableItemConnection',
+    'TranslatableItemEdge',
+    'TranslatableKinds',
+    //agreement
     'agreementTranslate',
+    'agreementTranslation',
+    'AgreementTranslatableContent',
+    //attribute
     'attributeTranslate',
+    'attributeTranslatableContent',
+    'attributeTranslation',
     'attributeValueTranslate',
+    'AttributeValueTranslation',
+    'attributeValueTranslatableContent',
+    'AttributeValueTranslationCountableConnection',
+    'AttributeValueTranslationCountableEdge',
+    //category
     'categoryTranslate',
+    'CategoryTranslation',
+    'CategoryTranslatableContent',
+    //collection
     'collectionTranslate',
+    'CollectionTranslatableContent',
+    'CollectionTranslation',
+    //variant
+    'ProductVariantTranslatableContent',
+    'ProductVariantTranslation',
+    //menu
     'menuItemTranslate',
     'micrositeTranslate',
+    'MicrositeTranslation',
+    'MenuItemTranslatableContent',
+    'MenuItemTranslation',
+    //page
+    'PageTranslatableContent',
     'pageTranslate',
+    'PageTranslation',
+    'PageTranslationInput',
+    //product
     'productTranslate',
     'productVariantTranslate',
+    'ProductTranslatableContent',
+    'ProductTranslation',
+    //sale
     'saleTranslate',
+    //shipping
     'shippingPriceTranslate',
+    'ShippingMethodTranslatableContent',
+    'ShippingMethodTranslation',
+    //shopSettings
     'shopSettingsTranslate',
-    'voucherTranslate'
+    'ShopSettingsTranslationInput',
+    'ShopTranslation',
+    //voucher
+    'voucherTranslate',
+    'VoucherTranslatableContent',
+    'VoucherTranslation',
   ];  
-     
+
+  //find types in use already or omitted on purpose
+  function getAllUsedTypeNames(sectionsArray, omittedNames = []) {
+    const allUsedNames = new Set();
   
-  function getFilteredAndSortedItems(sectionArray) {
-    return queryType.fields
-      .filter((query) => sectionArray.includes(query.name))
-      .map((query) => ({
-        ...query,
-        isQuery: true,
-      }))
-      .sort(sortByName)
-      .concat(
-        mutationType.fields
-          .filter((mutation) => sectionArray.includes(mutation.name))
-          .map((mutation) => ({
-            ...mutation,
-            isMutation: true,
-          }))
-          .sort(sortByName)
-      );
-  }  
+    sectionsArray.forEach(section => {
+      getFilteredAndSortedItems(section).forEach(item => {
+        if (item && item.name && !omittedNames.includes(item.name)) {
+          allUsedNames.add(item.name);
+        }
+      });
+    });
+  
+    return allUsedNames;
+  }
+
+   //omit types already in other sections 
+   const allUsedTypeNames = getAllUsedTypeNames([
+    appTokenSection, 
+    userTokenSection, 
+    attributesSection, 
+    categoriesSection, 
+    collectionsSection, 
+    digitalContentSection, 
+    featuresSection, 
+    groupedProductsSection, 
+    importAndExportSection, 
+    productsSection, 
+    productTypesSection, 
+    variantsSection, 
+    checkoutSection, 
+    creditLimitsSection, 
+    customersSection, 
+    currencySection, 
+    fulfillmentSection, 
+    invoicesSection, 
+    offersSection,
+    draftsSection,
+    quotesSection,
+    ordersSection, 
+    paymentsSection, 
+    refundsSection, 
+    returnsSection, 
+    taxesSection, 
+    wishlistSection, 
+    affiliatesSection, 
+    agreementsSection, 
+    payoutsSection, 
+    sellersSection, 
+    shippingZonesSection, 
+    stocksSection, 
+    warehousesSection, 
+    priceBooksSection,
+    salesSection,
+    vouchersSection,
+    addressSection, 
+    usersSection,
+    staffSection,
+    appsSection,
+    emailSection,
+    permissionGroupsSection,
+    passwordSection,
+    pluginsSection,
+    metadataSection,
+    webhooksSection,
+    documentsSection,
+    businessEntitiesSection,
+    channelsSection,
+    configurationSection,
+    insightsSection,
+    emailNotificationsSection,
+    menusSection,
+    conversationsSection,
+    mentionsSection,
+    micrositesSection,
+    pagesSection,
+    sitesSection,
+    translationsSection
+  ]);
+
+  //omit specific types by name
+  const omittedTypeNames = ([
+    'ImportProducts',
+    'ImportVinFile',
+    'VinFileImport',
+    'BarcodeObjectField',
+    //listing 
+    'Listing',
+    'ListingCountableConnection',
+    'ListingCountableEdge',
+    'ListingFilterInput',
+    'ListingOrder',
+    'ListingOrderField',
+    //core data
+    'CoreDataInput',
+    'CoreDataCreate',
+    'CoreDataType',
+    'UpdateCoreData',
+    'CoreDataUpdate',
+    'CreateCoreData',
+    //navigation
+    'Navigation',
+    'NavigationType',
+    //vault
+    'VaultDataCreate',
+    'CreateVaultData',
+    'VaultInput',
+    'VaultType',
+    //branding
+    'BrandingImagesDelete',
+    'BrandingInput',
+    'BrandingType',
+    'BrandingUpdate',
+    'Branding',
+    'Brand',
+    'UpdateBranding',
+    'DeleteBrandingImages',
+    //reviews 
+    'Review',
+    'Reviewer',
+    'LoyaltyAndReferrals',
+    'BottomLine',
+    'ProductRatingsAndReviews',
+    'ProductReviewSubmit',
+    'UserPointsInput',
+    'SubmitRatingAndReview',
+    //hashtag
+    'CreateHashtag',
+    'HashtagCreate',
+    'HashtagInput',
+    'HashtagType',
+    'HashtagTypeCountableConnection',
+    'HashtagTypeCountableEdge',
+    //directory
+    'Directory',
+    'DirectoryCountableConnection',
+    'DirectoryCountableEdge',
+    'DirectoryCreate',
+    'DirectoryError',
+    'DirectoryErrorCode',
+    'DirectoryFilterInput',
+    'DirectoryInput',
+    'DirectorySortField',
+    'DirectorySortingInput',
+    'DirectoryTranslation',
+    //gift card
+    'GiftCard',
+    'GiftCardActivate',
+    'GiftCardCountableConnection',
+    'GiftCardCountableEdge',
+    'GiftCardCreate',
+    'GiftCardCreateInput',
+    'GiftCardDeactivate',
+    'GiftCardError',
+    'GiftCardErrorCode',
+    'GiftCardUpdate',
+    'GiftCardUpdateInput',
+    'GoogleAnalyticsObjectField',
+    //service data
+    'ServiceAccount',
+    'ServiceAccountCountableConnection',
+    'ServiceAccountCountableEdge',
+    'ServiceAccountCreate',
+    'ServiceAccountDelete',
+    'ServiceAccountFilterInput',
+    'ServiceAccountInput',
+    'ServiceAccountSortField',
+    'ServiceAccountSortingInput',
+    'ServiceAccountToken',
+    'ServiceAccountTokenCreate',
+    'ServiceAccountTokenDelete',
+    'ServiceAccountTokenInput',
+    'ServiceAccountUpdate',
+  ]);
 
   // This is a contrived example that shows how you can generate your own simple or nested set
   // of data and items to create the output you want for SpectaQL. This example will only
@@ -805,14 +1579,43 @@ module.exports = ({
           name: 'App token',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(appTokenSection)
-
+          items: [
+          {
+            name: 'Mutations',
+            makeNavSection: false,
+            items: getMutationTypeItems(appTokenSection)
+          },
+          {
+            name: 'Types',
+            makeNavSection: false,
+            items: getNormalTypeItems(appTokenSection)
+            .map(type => ({
+              ...type,
+              isType: true, 
+            }))
+          },
+        ]
         },
         {
           name: 'User token',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(userTokenSection)
+          items: [
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(userTokenSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(userTokenSection)
+              .map(type => ({
+                ...type,
+                isType: true, 
+              }))
+            },
+          ]
         }
     ]
     },
@@ -827,62 +1630,245 @@ module.exports = ({
           name: 'Attributes',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(attributesSection)
-          .concat(getFilteredAndSortedItems(attributeValuesSection))
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: true,
+              items: getQueryTypeItems(attributesSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: true,
+              items: getMutationTypeItems(attributesSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: true,
+              items: getNormalTypeItems(attributesSection)
+              .map(type => ({
+                ...type,
+                isType: true, 
+              }))
+            },
+          ]
         },
         {
           name: 'Categories',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(categoriesSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: true,
+              items: getQueryTypeItems(categoriesSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: true,
+              items: getMutationTypeItems(categoriesSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: true,
+              items: getNormalTypeItems(categoriesSection)
+              .map(type => ({
+                ...type,
+                isType: true, 
+              }))
+            },
+          ]
         },
         {
           name: 'Collections',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(collectionsSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: true,
+              items: getQueryTypeItems(collectionsSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: true,
+              items: getMutationTypeItems(collectionsSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: true,
+              items: getNormalTypeItems(collectionsSection)
+              .map(type => ({
+                ...type,
+                isType: true, 
+              }))
+            },
+          ]
         },    
         {
           name: 'Digital content',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(digitalContentSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: true,
+              items: getQueryTypeItems(digitalContentSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(digitalContentSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(digitalContentSection)
+              .map(type => ({
+                ...type,
+                isType: true, 
+              }))
+            },
+          ]
         },    
         {
           name: 'Features',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(featuresSection)
-        },  
+          items: [
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(featuresSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(featuresSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },
         {
           name: 'Grouped products',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(groupedProductsSection)
+          items: [
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(groupedProductsSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(groupedProductsSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },  
         {
           name: 'Import and export',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(importAndExportSection)
-        },  
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(importAndExportSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(importAndExportSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(importAndExportSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },        
         {
           name: 'Products',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(productsSection)
-        },   
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(productsSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(productsSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(productsSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },
         {
           name: 'Product types',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(productTypesSection)
-        }, 
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(productTypesSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(productTypesSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(productTypesSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },
         {
           name: 'Variants',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(variantsSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(variantsSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(variantsSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(variantsSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },                     
       ],
     },
@@ -897,73 +1883,361 @@ module.exports = ({
           name: 'Checkout',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(checkoutSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(checkoutSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(checkoutSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(checkoutSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
         {
           name: 'Credit Limits',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(creditLimitsSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(creditLimitsSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(creditLimitsSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(creditLimitsSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
         {
           name: 'Customers',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(customersSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(customersSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(customersSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(customersSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
         {
           name: 'Currency',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(currencySection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(currencySection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(currencySection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(currencySection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
         {
           name: 'Fulfillment',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(fulfillmentSection)
+          items: [
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(fulfillmentSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(fulfillmentSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
         {
           name: 'Invoices',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(invoicesSection)
+          items: [
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(invoicesSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(invoicesSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
         {
           name: 'Orders',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(ordersSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(ordersSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(ordersSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(ordersSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },
+        {
+          name: 'Drafts',
+          makeNavSection: true,
+          makeContentSection: true,
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(draftsSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(draftsSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(draftsSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },
+        {
+          name: 'Quotes',
+          makeNavSection: true,
+          makeContentSection: true,
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(quotesSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(quotesSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(quotesSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },
+        {
+          name: 'Offers',
+          makeNavSection: true,
+          makeContentSection: true,
+          items: [
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(offersSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(offersSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
         {
           name: 'Payments',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(paymentsSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(paymentsSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(paymentsSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(paymentsSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
         {
           name: 'Refunds',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(refundsSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(refundsSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(refundsSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(refundsSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
         {
           name: 'Returns',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(returnsSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(returnsSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(returnsSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(returnsSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
         {
           name: 'Taxes',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(taxesSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(taxesSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(taxesSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(taxesSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
         {
           name: 'Wishlist',
           makeNavSection: true,
           makeContentSection: true,
-          items: getFilteredAndSortedItems(wishlistSection)
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(wishlistSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(wishlistSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(wishlistSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
         },
       ]},
       {
@@ -977,25 +2251,101 @@ module.exports = ({
             name: 'Affiliates',
             makeNavSection: true,
             makeContentSection: true,
-            items: getFilteredAndSortedItems(affiliatesSection)
+            items: [
+              {
+                name: 'Queries',
+                makeNavSection: false,
+                items: getQueryTypeItems(affiliatesSection)
+              },
+              {
+                name: 'Mutations',
+                makeNavSection: false,
+                items: getMutationTypeItems(affiliatesSection)
+              },
+              {
+                name: 'Types',
+                makeNavSection: false,
+                items: getNormalTypeItems(affiliatesSection).map(type => ({
+                  ...type,
+                  isType: true,
+                }))
+              },
+            ]
           },
           {
             name: 'Agreements',
             makeNavSection: true,
             makeContentSection: true,
-            items: getFilteredAndSortedItems(agreementsSection)
+            items: [
+              {
+                name: 'Queries',
+                makeNavSection: false,
+                items: getQueryTypeItems(agreementsSection)
+              },
+              {
+                name: 'Mutations',
+                makeNavSection: false,
+                items: getMutationTypeItems(agreementsSection)
+              },
+              {
+                name: 'Types',
+                makeNavSection: false,
+                items: getNormalTypeItems(agreementsSection).map(type => ({
+                  ...type,
+                  isType: true,
+                }))
+              },
+            ]
           },
           {
             name: 'Payouts',
             makeNavSection: true,
             makeContentSection: true,
-            items: getFilteredAndSortedItems(payoutsSection)
+            items: [
+              {
+                name: 'Queries',
+                makeNavSection: false,
+                items: getQueryTypeItems(payoutsSection)
+              },
+              {
+                name: 'Mutations',
+                makeNavSection: false,
+                items: getMutationTypeItems(payoutsSection)
+              },
+              {
+                name: 'Types',
+                makeNavSection: false,
+                items: getNormalTypeItems(payoutsSection).map(type => ({
+                  ...type,
+                  isType: true,
+                }))
+              },
+            ]
           },
           {
             name: 'Sellers',
             makeNavSection: true,
             makeContentSection: true,
-            items: getFilteredAndSortedItems(sellersSection)
+            items: [
+              {
+                name: 'Queries',
+                makeNavSection: false,
+                items: getQueryTypeItems(sellersSection)
+              },
+              {
+                name: 'Mutations',
+                makeNavSection: false,
+                items: getMutationTypeItems(sellersSection)
+              },
+              {
+                name: 'Types',
+                makeNavSection: false,
+                items: getNormalTypeItems(sellersSection).map(type => ({
+                  ...type,
+                  isType: true,
+                }))
+              },
+            ]
           },
         ]
     },
@@ -1006,24 +2356,81 @@ module.exports = ({
       hideInContent: true,
       makeContentSection: false,
       items: [
-        {
-          name: 'Shipping zones',
-          makeNavSection: true,
-          makeContentSection: true,
-          items: getFilteredAndSortedItems(shippingZonesSection)
-        },
-        {
-          name: 'Stocks',
-          makeNavSection: true,
-          makeContentSection: true,
-          items: getFilteredAndSortedItems(stocksSection)
-        },
-        {
-          name: 'Warehouses',
-          makeNavSection: true,
-          makeContentSection: true,
-          items: getFilteredAndSortedItems(warehousesSection)
-        },
+                {
+            name: 'Shipping zones',
+            makeNavSection: true,
+            makeContentSection: true,
+            items: [
+              {
+                name: 'Queries',
+                makeNavSection: false,
+                items: getQueryTypeItems(shippingZonesSection)
+              },
+              {
+                name: 'Mutations',
+                makeNavSection: false,
+                items: getMutationTypeItems(shippingZonesSection)
+              },
+              {
+                name: 'Types',
+                makeNavSection: false,
+                items: getNormalTypeItems(shippingZonesSection).map(type => ({
+                  ...type,
+                  isType: true,
+                }))
+              },
+            ]
+          },
+          {
+            name: 'Stocks',
+            makeNavSection: true,
+            makeContentSection: true,
+            items: [
+              {
+                name: 'Queries',
+                makeNavSection: false,
+                items: getQueryTypeItems(stocksSection)
+              },
+              {
+                name: 'Mutations',
+                makeNavSection: false,
+                items: getMutationTypeItems(stocksSection)
+              },
+              {
+                name: 'Types',
+                makeNavSection: false,
+                items: getNormalTypeItems(stocksSection).map(type => ({
+                  ...type,
+                  isType: true,
+                }))
+              },
+            ]
+          },
+          {
+            name: 'Warehouses',
+            makeNavSection: true,
+            makeContentSection: true,
+            items: [
+              {
+                name: 'Queries',
+                makeNavSection: false,
+                items: getQueryTypeItems(warehousesSection)
+              },
+              {
+                name: 'Mutations',
+                makeNavSection: false,
+                items: getMutationTypeItems(warehousesSection)
+              },
+              {
+                name: 'Types', 
+                makeNavSection: false,
+                items: getNormalTypeItems(warehousesSection).map(type => ({
+                  ...type,
+                  isType: true,
+                }))
+              },
+            ]
+          },
       ]},
       {
         name: 'Discounts',
@@ -1036,26 +2443,76 @@ module.exports = ({
             name: 'Price books',
             makeNavSection: true,
             makeContentSection: true,
-            items: getFilteredAndSortedItems(priceBooksSection)
-              .concat(
-                getFilteredAndSortedItems(priceBookProductTypesSection),
-                getFilteredAndSortedItems(priceBookProductsSection),
-                getFilteredAndSortedItems(priceBookVariantsSection),
-                getFilteredAndSortedItems(priceBookUsersSection),
-                getFilteredAndSortedItems(priceBookBusinessEntitiesSection)
-              )
+            items: [
+              {
+                name: 'Queries',
+                makeNavSection: false,
+                items: getQueryTypeItems(priceBooksSection)
+              },
+              {
+                name: 'Mutations',
+                makeNavSection: false,
+                items: getMutationTypeItems(priceBooksSection)
+              },
+              {
+                name: 'Types',
+                makeNavSection: false,
+                items: getNormalTypeItems(priceBooksSection).map(type => ({
+                  ...type,
+                  isType: true,
+                }))
+              },
+            ]
           },
           {
             name: 'Sales',
             makeNavSection: true,
             makeContentSection: true,
-            items: getFilteredAndSortedItems(salesSection)
+            items: [
+              {
+                name: 'Queries',
+                makeNavSection: false,
+                items: getQueryTypeItems(salesSection)
+              },
+              {
+                name: 'Mutations',
+                makeNavSection: false,
+                items: getMutationTypeItems(salesSection)
+              },
+              {
+                name: 'Types',
+                makeNavSection: false,
+                items: getNormalTypeItems(salesSection).map(type => ({
+                  ...type,
+                  isType: true,
+                }))
+              },
+            ]
           },
           {
             name: 'Vouchers',
             makeNavSection: true,
             makeContentSection: true,
-            items: getFilteredAndSortedItems(vouchersSection)
+            items: [
+              {
+                name: 'Queries',
+                makeNavSection: false,
+                items: getQueryTypeItems(vouchersSection)
+              },
+              {
+                name: 'Mutations',
+                makeNavSection: false,
+                items: getMutationTypeItems(vouchersSection)
+              },
+              {
+                name: 'Types',
+                makeNavSection: false,
+                items: getNormalTypeItems(vouchersSection).map(type => ({
+                  ...type,
+                  isType: true,
+                }))
+              },
+            ]
           },
         ]},
         {
@@ -1069,24 +2526,141 @@ module.exports = ({
               name: 'Address',
               makeNavSection: true,
               makeContentSection: true,
-              items: getFilteredAndSortedItems(addressSection)
+              items: [
+                {
+                  name: 'Queries',
+                  makeNavSection: false,
+                  items: getQueryTypeItems(addressSection)
+                },
+                {
+                  name: 'Mutations',
+                  makeNavSection: false,
+                  items: getMutationTypeItems(addressSection)
+                },
+                {
+                  name: 'Types',
+                  makeNavSection: false,
+                  items: getNormalTypeItems(addressSection).map(type => ({
+                    ...type,
+                    isType: true,
+                  }))
+                },
+              ]
             },
             {
               name: 'Permission Groups',
               makeNavSection: true,
               makeContentSection: true,
-              items: getFilteredAndSortedItems(permissionGroupsSection)
+              items: [
+                {
+                  name: 'Queries',
+                  makeNavSection: false,
+                  items: getQueryTypeItems(permissionGroupsSection)
+                },
+                {
+                  name: 'Mutations',
+                  makeNavSection: false,
+                  items: getMutationTypeItems(permissionGroupsSection)
+                },
+                {
+                  name: 'Types',
+                  makeNavSection: false,
+                  items: getNormalTypeItems(permissionGroupsSection).map(type => ({
+                    ...type,
+                    isType: true,
+                  }))
+                },
+              ]
             },
             {
               name: 'Users',
               makeNavSection: true,
               makeContentSection: true,
-              items: getFilteredAndSortedItems(usersSection)
-                .concat(
-                  getFilteredAndSortedItems(staffSection),
-                  getFilteredAndSortedItems(emailSection),
-                  getFilteredAndSortedItems(passwordSection)
-                )
+              items: [
+                {
+                  name: 'Queries',
+                  makeNavSection: false,
+                  items: getQueryTypeItems(usersSection)
+                },
+                {
+                  name: 'Mutations',
+                  makeNavSection: false,
+                  items: getMutationTypeItems(usersSection)
+                },
+                {
+                  name: 'Types',
+                  makeNavSection: false,
+                  items: getNormalTypeItems(usersSection).map(type => ({
+                    ...type,
+                    isType: true,
+                  }))
+                },
+              ]
+            },
+            {
+              name: 'Staff',
+              makeNavSection: true,
+              makeContentSection: true,
+              items: [
+                {
+                  name: 'Queries',
+                  makeNavSection: false,
+                  items: getQueryTypeItems(staffSection)
+                },
+                {
+                  name: 'Mutations',
+                  makeNavSection: false,
+                  items: getMutationTypeItems(staffSection)
+                },
+                {
+                  name: 'Types',
+                  makeNavSection: false,
+                  items: getNormalTypeItems(staffSection).map(type => ({
+                    ...type,
+                    isType: true,
+                  }))
+                },
+              ]
+            },
+            {
+              name: 'User Email',
+              makeNavSection: true,
+              makeContentSection: true,
+              items: [
+                {
+                  name: 'Mutations',
+                  makeNavSection: false,
+                  items: getMutationTypeItems(emailSection)
+                },
+                {
+                  name: 'Types',
+                  makeNavSection: false,
+                  items: getNormalTypeItems(emailSection).map(type => ({
+                    ...type,
+                    isType: true,
+                  }))
+                },
+              ]
+            },
+            {
+              name: 'User Password',
+              makeNavSection: true,
+              makeContentSection: true,
+              items: [
+                {
+                  name: 'Mutations',
+                  makeNavSection: false,
+                  items: getMutationTypeItems(passwordSection)
+                },
+                {
+                  name: 'Types',
+                  makeNavSection: false,
+                  items: getNormalTypeItems(passwordSection).map(type => ({
+                    ...type,
+                    isType: true,
+                  }))
+                },
+              ]
             },
           ]},
           {
@@ -1100,27 +2674,97 @@ module.exports = ({
                 name: 'Apps',
                 makeNavSection: true,
                 makeContentSection: true,
-                items: getFilteredAndSortedItems(appsSection)
-                .concat(getFilteredAndSortedItems(typeformSection))
+                items: [
+                  {
+                    name: 'Queries',
+                    makeNavSection: false,
+                    items: getQueryTypeItems(appsSection)
+                  },
+                  {
+                    name: 'Mutations',
+                    makeNavSection: false,
+                    items: getMutationTypeItems(appsSection)
+                  },
+                  {
+                    name: 'Types',
+                    makeNavSection: false,
+                    items: getNormalTypeItems(appsSection).map(type => ({
+                      ...type,
+                      isType: true,
+                    }))
+                  },
+                ]
               },
               {
                 name: 'Metadata',
                 makeNavSection: true,
                 makeContentSection: true,
-                items: getFilteredAndSortedItems(metadataSection)
+                items: [
+                  {
+                    name: 'Mutations',
+                    makeNavSection: false,
+                    items: getMutationTypeItems(metadataSection)
+                  },
+                  {
+                    name: 'Types',
+                    makeNavSection: false,
+                    items: getNormalTypeItems(metadataSection).map(type => ({
+                      ...type,
+                      isType: true,
+                    }))
+                  },
+                ]
               },
               {
                 name: 'Plugins',
                 makeNavSection: true,
                 makeContentSection: true,
-                items: getFilteredAndSortedItems(pluginsSection)
+                items: [
+                  {
+                    name: 'Queries',
+                    makeNavSection: false,
+                    items: getQueryTypeItems(pluginsSection)
+                  },
+                  {
+                    name: 'Mutations',
+                    makeNavSection: false,
+                    items: getMutationTypeItems(pluginsSection)
+                  },
+                  {
+                    name: 'Types',
+                    makeNavSection: false,
+                    items: getNormalTypeItems(pluginsSection).map(type => ({
+                      ...type,
+                      isType: true,
+                    }))
+                  },
+                ]
               },
               {
                 name: 'Webhooks',
                 makeNavSection: true,
                 makeContentSection: true,
-                items: getFilteredAndSortedItems(webhooksSection)
-              }
+                items: [
+                  {
+                    name: 'Queries',
+                    makeNavSection: false,
+                    items: getQueryTypeItems(webhooksSection)
+                  },
+                  {
+                    name: 'Mutations',
+                    makeNavSection: false,
+                    items: getMutationTypeItems(webhooksSection)
+                  },
+                  {
+                    name: 'Types',
+                    makeNavSection: false,
+                    items: getNormalTypeItems(webhooksSection).map(type => ({
+                      ...type,
+                      isType: true,
+                    }))
+                  },
+                ]
+              },
             ]},
             {
               name: 'General',
@@ -1128,108 +2772,335 @@ module.exports = ({
               makeNavSection: false,
               hideInContent: true,
               makeContentSection: false,
-              items: [
-                {
-                  name: 'Business Entities',
-                  makeNavSection: true,
-                  makeContentSection: true,
-                  items: getFilteredAndSortedItems(businessEntitiesSection)
-                },
-                {
-                  name: 'Configuration',
-                  makeNavSection: true,
-                  makeContentSection: true,
-                  items: getFilteredAndSortedItems(configurationSection)
-                },
-                {
-                  name: 'Documents',
-                  makeNavSection: true,
-                  makeContentSection: true,
-                  items: getFilteredAndSortedItems(documentsSection)
-                },
-                {
-                  name: 'Insights',
-                  makeNavSection: true,
-                  makeContentSection: true,
-                  items: getFilteredAndSortedItems(insightsPayoutsSection)
-                  .concat(
-                    getFilteredAndSortedItems(insightsOrdersSection),
-                    getFilteredAndSortedItems(insightsSalesSection),
-                    getFilteredAndSortedItems(insightsTaxSection)
-                  )
-                },
-                {
-                  name: 'Logs',
-                  makeNavSection: true,
-                  makeContentSection: true,
-                  items: getFilteredAndSortedItems(logsSection)
-                },
-              ]},
-              {
-                name: 'Front-End',
-                hideInNav: false,
-                makeNavSection: false,
-                hideInContent: true,
-                makeContentSection: false,
+              items: [{
+                name: 'Business Entities',
+                makeNavSection: true,
+                makeContentSection: true,
                 items: [
+                  {
+                    name: 'Queries',
+                    makeNavSection: false,
+                    items: getQueryTypeItems(businessEntitiesSection)
+                  },
+                  {
+                    name: 'Mutations',
+                    makeNavSection: false,
+                    items: getMutationTypeItems(businessEntitiesSection)
+                  },
+                  {
+                    name: 'Types',
+                    makeNavSection: false,
+                    items: getNormalTypeItems(businessEntitiesSection).map(type => ({
+                      ...type,
+                      isType: true,
+                    }))
+                  },
+                ]
+              },
+              {
+                name: 'Configuration',
+                makeNavSection: true,
+                makeContentSection: true,
+                items: [
+                  {
+                    name: 'Queries',
+                    makeNavSection: false,
+                    items: getQueryTypeItems(configurationSection)
+                  },
+                  {
+                    name: 'Mutations',
+                    makeNavSection: false,
+                    items: getMutationTypeItems(configurationSection)
+                  },
+                  {
+                    name: 'Types',
+                    makeNavSection: false,
+                    items: getNormalTypeItems(configurationSection).map(type => ({
+                      ...type,
+                      isType: true,
+                    }))
+                  },
+                ]
+              },
+              {
+                name: 'Documents',
+                makeNavSection: true,
+                makeContentSection: true,
+                items: [
+                  {
+                    name: 'Mutations',
+                    makeNavSection: false,
+                    items: getMutationTypeItems(documentsSection)
+                  },
+                  {
+                    name: 'Types',
+                    makeNavSection: false,
+                    items: getNormalTypeItems(documentsSection).map(type => ({
+                      ...type,
+                      isType: true,
+                    }))
+                  },
+                ]
+              },
+              {
+                name: 'Insights',
+                makeNavSection: true,
+                makeContentSection: true,
+                items: [
+                  {
+                    name: 'Queries',
+                    makeNavSection: false,
+                    items: getQueryTypeItems(insightsSection)
+                  },
+                  {
+                    name: 'Types',
+                    makeNavSection: false,
+                    items: getNormalTypeItems(insightsSection).map(type => ({
+                      ...type,
+                      isType: true,
+                    }))
+                  },
+                ]
+              },
+              {
+                name: 'Email Notifications',
+                makeNavSection: true,
+                makeContentSection: true,
+                items: [
+                  {
+                    name: 'Queries',
+                    makeNavSection: false,
+                    items: getQueryTypeItems(emailNotificationsSection)
+                  },
+                  {
+                    name: 'Mutations',
+                    makeNavSection: false,
+                    items: getMutationTypeItems(emailNotificationsSection)
+                  },
+                  {
+                    name: 'Types',
+                    makeNavSection: false,
+                    items: getNormalTypeItems(emailNotificationsSection).map(type => ({
+                      ...type,
+                      isType: true,
+                    }))
+                  },
+                ]
+              },
                   {
                     name: 'Channels',
                     makeNavSection: true,
                     makeContentSection: true,
-                    items: getFilteredAndSortedItems(channelsSection)
+                    items: [
+                      {
+                        name: 'Queries',
+                        makeNavSection: false,
+                        items: getQueryTypeItems(channelsSection)
+                      },
+                      {
+                        name: 'Mutations',
+                        makeNavSection: false,
+                        items: getMutationTypeItems(channelsSection)
+                      },
+                      {
+                        name: 'Types',
+                        makeNavSection: false,
+                        items: getNormalTypeItems(channelsSection).map(type => ({
+                          ...type,
+                          isType: true,
+                        }))
+                      },
+                    ]
                   },
                   {
                     name: 'Conversations',
                     makeNavSection: true,
                     makeContentSection: true,
-                    items: getFilteredAndSortedItems(conversationsSection)
+                    items: [
+                      {
+                        name: 'Queries',
+                        makeNavSection: false,
+                        items: getQueryTypeItems(conversationsSection)
+                      },
+                      {
+                        name: 'Mutations',
+                        makeNavSection: false,
+                        items: getMutationTypeItems(conversationsSection)
+                      },
+                      {
+                        name: 'Types',
+                        makeNavSection: false,
+                        items: getNormalTypeItems(conversationsSection).map(type => ({
+                          ...type,
+                          isType: true,
+                        }))
+                      },
+                    ]
                   },
                   {
                     name: 'Menus',
                     makeNavSection: true,
                     makeContentSection: true,
-                    items: getFilteredAndSortedItems(menusSection)
+                    items: [
+                      {
+                        name: 'Queries',
+                        makeNavSection: false,
+                        items: getQueryTypeItems(menusSection)
+                      },
+                      {
+                        name: 'Mutations',
+                        makeNavSection: false,
+                        items: getMutationTypeItems(menusSection)
+                      },
+                      {
+                        name: 'Types',
+                        makeNavSection: false,
+                        items: getNormalTypeItems(menusSection).map(type => ({
+                          ...type,
+                          isType: true,
+                        }))
+                      },
+                    ]
                   },
                   {
                     name: 'Mentions',
                     makeNavSection: true,
                     makeContentSection: true,
-                    items: getFilteredAndSortedItems(mentionsSection)
+                    items: [
+                      {
+                        name: 'Queries',
+                        makeNavSection: false,
+                        items: getQueryTypeItems(mentionsSection)
+                      },
+                      {
+                        name: 'Mutations',
+                        makeNavSection: false,
+                        items: getMutationTypeItems(mentionsSection)
+                      },
+                      {
+                        name: 'Types',
+                        makeNavSection: false,
+                        items: getNormalTypeItems(mentionsSection).map(type => ({
+                          ...type,
+                          isType: true,
+                        }))
+                      },
+                    ]
                   },
                   {
                     name: 'Microsites',
                     makeNavSection: true,
                     makeContentSection: true,
-                    items: getFilteredAndSortedItems(micrositesSection)
+                    items: [
+                      {
+                        name: 'Queries',
+                        makeNavSection: false,
+                        items: getQueryTypeItems(micrositesSection)
+                      },
+                      {
+                        name: 'Mutations',
+                        makeNavSection: false,
+                        items: getMutationTypeItems(micrositesSection)
+                      },
+                      {
+                        name: 'Types',
+                        makeNavSection: false,
+                        items: getNormalTypeItems(micrositesSection).map(type => ({
+                          ...type,
+                          isType: true,
+                        }))
+                      },
+                    ]
                   },
                   {
                     name: 'Pages',
                     makeNavSection: true,
                     makeContentSection: true,
-                    items: getFilteredAndSortedItems(pagesSection)
+                    items: [
+                      {
+                        name: 'Queries',
+                        makeNavSection: false,
+                        items: getQueryTypeItems(pagesSection)
+                      },
+                      {
+                        name: 'Mutations',
+                        makeNavSection: false,
+                        items: getMutationTypeItems(pagesSection)
+                      },
+                      {
+                        name: 'Types',
+                        makeNavSection: false,
+                        items: getNormalTypeItems(pagesSection).map(type => ({
+                          ...type,
+                          isType: true,
+                        }))
+                      },
+                    ]
                   },
                   {
                     name: 'Sites',
                     makeNavSection: true,
                     makeContentSection: true,
-                    items: getFilteredAndSortedItems(sitesSection)
+                    items: [
+                      {
+                        name: 'Queries',
+                        makeNavSection: false,
+                        items: getQueryTypeItems(sitesSection)
+                      },
+                      {
+                        name: 'Mutations',
+                        makeNavSection: false,
+                        items: getMutationTypeItems(sitesSection)
+                      },
+                      {
+                        name: 'Types',
+                        makeNavSection: false,
+                        items: getNormalTypeItems(sitesSection).map(type => ({
+                          ...type,
+                          isType: true,
+                        }))
+                      },
+                    ]
                   },
                   {
                     name: 'Translations',
                     makeNavSection: true,
                     makeContentSection: true,
-                    items: getFilteredAndSortedItems(translationsSection)
-                  },
+                    items: [
+                      {
+                        name: 'Queries',
+                        makeNavSection: false,
+                        items: getQueryTypeItems(translationsSection)
+                      },
+                      {
+                        name: 'Mutations',
+                        makeNavSection: false,
+                        items: getMutationTypeItems(translationsSection)
+                      },
+                      {
+                        name: 'Types',
+                        makeNavSection: false,
+                        items: getNormalTypeItems(translationsSection).map(type => ({
+                          ...type,
+                          isType: true,
+                        }))
+                      },
+                    ]
+                  }
                 ]},
-    {
-      name: 'Types',
+   {
+      name: 'Definitions',
       makeContentSection: true,
       items: normalTypes
-        .map((type) => ({
-          ...type,
-          isType: true,
-        }))
-        .sort(sortByName),
-    },
+      .filter(type => 
+        !allUsedTypeNames.has(type.name) && 
+        !omittedTypeNames.includes(type.name)
+      )
+      .map(type => ({
+        ...type,
+        isType: true,
+      }))
+      .sort(sortByName)
+   },
   ].filter(Boolean)
 }

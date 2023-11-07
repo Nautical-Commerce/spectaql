@@ -40,7 +40,7 @@ $background-arguments: #3e3e49d4;
 }
 
 .badge--query {
-  background-color: rgb(55 96 122 / 53%);  /* Light blue background for "Q" */
+  background-color: rgb(55 96 122 / 54%);  /* Light blue background for "Q" */
   color: #A5E0F3;   /* Midnight blue text color */
   margin-left: -8px;
 }
@@ -49,6 +49,27 @@ $background-arguments: #3e3e49d4;
   background-color: rgb(102 87 11 / 54%);  /* Yellow background for "M" */
   color: #FCD839;   /* Midnight blue text color */
   margin-left: -8px;
+}
+
+.badge--type {
+  background-color: rgb(136, 14, 79, 0.54);  /* Yellow background for "M" */
+  color: #F8BBD0;   /* Midnight blue text color */
+  margin-left: -8px;
+}
+
+table {
+  max-height: 600px;
+  overflow: scroll;
+}
+
+pre {
+  max-height: 500px;
+  overflow: scroll;
+}
+
+th {
+  text-transform: uppercase;
+  color: #A5E0F3;
 }
 
 #spectaql {
@@ -83,9 +104,16 @@ $background-arguments: #3e3e49d4;
     }
 
 #sidebar {
+  max-width: 325px;
+
   ul li a {
     line-height: 1.5;
 };
+
+.nav-group-items{
+  padding-left: .75em;
+}
+
  .nav-item {
   font-family: Menlo, Consolas, monospace;
   font-size: 0.9em;
@@ -98,22 +126,40 @@ $background-arguments: #3e3e49d4;
 }
 }
 
-.query-nav-item, .mutation-nav-item, .subscription-nav-item {
-  display: none;
+.types-nav-item {
+  color: #F8BBD0 !important;
+  font-size: 0.7rem !important;
+  text-transform: lowercase !important;
+  margin-top: -12px !important;
 }
 
-.first-query {
-  display: block;
-  color: #A5E0F3;
-  font-size: 0.7rem;
-  text-transform: lowercase;
+.types-nav-item:hover {
+  color: #fff;
+  cursor: pointer;
 }
 
-.first-mutation {
-  display: block;
-  color: #FCD839;
-  font-size: 0.7rem;
-  text-transform: lowercase;
+.query-nav-item {
+  color: #A5E0F3 !important;
+  font-size: 0.7rem !important;
+  text-transform: lowercase !important;
+  margin-top: -12px !important;
+}
+
+.query-nav-item:hover {
+  color: #fff;
+  cursor: pointer;
+}
+
+.mutation-nav-item {
+  color: #FCD839 !important;
+  font-size: 0.7rem !important;
+  text-transform: lowercase !important;
+  margin-top: -12px !important;
+}
+
+.mutation-nav-item:hover {
+  color: #fff;
+  cursor: pointer;
 }
 
 a {
@@ -125,7 +171,7 @@ a.nav-scroll-active::before {
   content: "";
   position: absolute;
   top: 0;
-  left: -10px; /* This will place the pseudo-element to the left of the anchor tag */
+  left: -5px; /* This will place the pseudo-element to the left of the anchor tag */
   height: 100%; 
   width: 3px; /* Adjust width for desired border thickness */
   background-color: #26B2E3; /* Change to your desired border color */

@@ -113,7 +113,7 @@ const introspectionOptionDefaults = Object.freeze({
   // TODO: support this granularly in microfiber
   hideSubscriptionsWithUndocumentedReturnType: true,
 
-  hideUnusedTypes: true,
+  hideUnusedTypes: true, 
 
   objectsDocumentedDefault: true,
   objectDocumentedDefault: true,

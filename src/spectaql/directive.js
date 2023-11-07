@@ -12,12 +12,12 @@ export const DEFAULT_DIRECTIVE_OPTION_NAME = 'SpectaQLOption'
 
 const MICROFIBER_OPTIONS = Object.freeze({
   fixQueryAndMutationAndSubscriptionTypes: false,
-  removeUnusedTypes: false,
+  removeUnusedTypes: true,
   removeFieldsWithMissingTypes: false,
   removeArgsWithMissingTypes: false,
   removeInputFieldsWithMissingTypes: false,
   removePossibleTypesOfMissingTypes: false,
-  cleanupSchemaImmediately: false,
+  cleanupSchemaImmediately: true,
 })
 
 /** attempt to parse one example value */
