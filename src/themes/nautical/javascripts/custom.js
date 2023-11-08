@@ -1,107 +1,59 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const navItems = document.querySelectorAll('.nav-group-title');
+// Toggles the 'expanded' class on the clicked 'operation-section' h6 element
+// and toggles the 'expanded' class on the related 'schema-section' ul element.
+function toggleNavItem(operationSection) {
+  operationSection.classList.toggle('expanded');
+  let schemaSection = operationSection.nextElementSibling;
+  if (schemaSection && schemaSection.classList.contains('schema-section')) {
+    schemaSection.classList.toggle('expanded');
+  }
+}
 
-  // Initialize all navItems with a '+' sign
-  navItems.forEach(navItem => {
-    const content = navItem.textContent.trim();
-    if (['Queries', 'Mutations', 'Types', 'Definitions'].includes(content)) {
-      appendSign(navItem, '+');
-      const nextUl = navItem.nextElementSibling;
-      if (nextUl && nextUl.tagName === 'UL') {
-        nextUl.style.display = 'none'; // Hide UL initially
-        nextUl.classList.add('schema-section');
-        navItem.addEventListener('click', function () {
-          toggleNavItems(nextUl, this);
-        });
-        addNavItemClass(navItem, content);
+// Automatically expands the 'operation-section' and 'schema-section'
+// if they contain a '.nav-scroll-active' link.
+function updateSectionsBasedOnActiveClass() {
+  document.querySelectorAll('.operation-section').forEach(operationSection => {
+    const schemaSection = operationSection.nextElementSibling;
+    if (schemaSection && schemaSection.classList.contains('schema-section')) {
+      const activeLink = schemaSection.querySelector('li a.nav-scroll-active');
+      if (activeLink) {
+        operationSection.classList.add('expanded');
+        schemaSection.classList.add('expanded');
       }
     }
   });
+}
 
-  // Function to check and update the expansion and signs based on active class
-  function updateSectionsBasedOnActiveClass() {
-    navItems.forEach(navItem => {
-      const nextUl = navItem.nextElementSibling;
-      if (nextUl && nextUl.classList.contains('schema-section')) {
-        // Check if any <a> within the <ul> has the 'nav-scroll-active' class
-        const activeLink = nextUl.querySelector('li a.nav-scroll-active');
-        const isExpanded = nextUl.style.display === 'block';
+// Listen for scroll events and hash changes to update sections accordingly.
+document.addEventListener('scroll', updateSectionsBasedOnActiveClass);
+window.addEventListener('hashchange', updateSectionsBasedOnActiveClass);
 
-        if (activeLink && !isExpanded) {
-          // Expand and update sign if there's an active link and the section is not already expanded
-          nextUl.style.display = 'block';
-          updateSign(navItem, '-');
-        } else if (!activeLink && isExpanded) {
-          // Collapse and update sign if there's no active link and the section is expanded
-          nextUl.style.display = 'none';
-          updateSign(navItem, '+');
-        }
-      }
-    });
+// get anchor link function definition
+function copyAnchor(clickedElement) {
+  var operationElement = clickedElement.closest('.operation');
+  var definitionElement = clickedElement.closest('.definition');
+
+  var id;
+  if (operationElement) {
+    id = operationElement.getAttribute('id');
+  } else if (definitionElement) {
+    id = definitionElement.getAttribute('id');
   }
 
-  // Listen to scroll events for changing active section
-  document.addEventListener('scroll', updateSectionsBasedOnActiveClass);
-
-  // Listen for hash changes (when jumping to a section)
-  window.addEventListener('hashchange', updateSectionsBasedOnActiveClass);
-});
-
-function toggleNavItems(ulElement, navGroupTitle) {
-  const isHidden = ulElement.style.display === 'none';
-  ulElement.style.display = isHidden ? 'block' : 'none';
-  updateSign(navGroupTitle, isHidden ? '-' : '+');
-}
-
-function appendSign(navGroupTitle, sign) {
-  navGroupTitle.innerHTML += ` <span class="toggle-sign">${sign}</span>`;
-}
-
-function updateSign(navGroupTitle, sign) {
-  const toggleSign = navGroupTitle.querySelector('.toggle-sign');
-  if (toggleSign) {
-    toggleSign.textContent = sign;
+  if (!id) {
+    // Alert the user if no id is found
+    alert("Link cannot be copied. No 'operation' or 'definition' element found.");
+    return;
   }
-}
 
-function addNavItemClass(navGroupTitle, content) {
-  const classMap = {
-    'Queries': 'query-nav-item',
-    'Mutations': 'mutation-nav-item',
-    'Types': 'types-nav-item',
-  };
-  const className = classMap[content];
-  if (className) {
-    navGroupTitle.classList.add(className);
-  }
-}
-
-//copy header anchor link 
-document.addEventListener("DOMContentLoaded", function() {
-  document.querySelectorAll('.copy-icon').forEach(function(element) {
-    element.addEventListener('click', function() {
-      var operationElement = this.closest('.operation');
-      var definitionElement = this.closest('.definition');
-
-      var id;
-      if (operationElement) {
-        id = operationElement.getAttribute('id');
-      } else if (definitionElement) {
-        id = definitionElement.getAttribute('id');
-      }
-
-      if (!id) {
-        // Handle the case when neither '.operation' nor '.definition' is found.
-        console.error("No '.operation' or '.definition' element found.");
-        return;
-      }
-
-      var url = window.location.href.split('#')[0] + '#' + id;
-      navigator.clipboard.writeText(url);
-
-      window.history.replaceState(null, null, '#' + id);
-      document.getElementById(id).scrollIntoView();
-
-    });
+  var url = window.location.href.split('#')[0] + '#' + id;
+  navigator.clipboard.writeText(url).then(function() {
+    /* Clipboard successfully set */
+    console.log('Anchor URL copied to clipboard.');
+  }, function() {
+    /* Clipboard write failed */
+    console.error('Failed to copy anchor URL.');
   });
-});
+
+  window.history.replaceState(null, null, '#' + id);
+  document.getElementById(id).scrollIntoView();
+}

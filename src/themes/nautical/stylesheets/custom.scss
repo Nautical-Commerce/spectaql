@@ -161,4 +161,29 @@ th {
   color: white;
 }
 
+.schema-section {
+  display: none; /* Hide all .schema-section by default */
+}
+
+.nav-group-title .toggle-sign::before {
+  content: '+'; /* Add a '+' sign before the toggle sign */
+}
+
+.nav-group-title.expanded .toggle-sign::before {
+  content: '-'; /* Change to '-' when the section is expanded */
+}
+
+.expanded + .schema-section {
+  display: block; /* Show the .schema-section when its title is expanded */
+}
+
+.operation-section::after {
+  content: " +";
+}
+
+.operation-section.expanded::after {
+  content: " -";
+}
+
+
 }

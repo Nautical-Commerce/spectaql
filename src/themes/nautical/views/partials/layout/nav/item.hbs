@@ -1,8 +1,8 @@
 {{#unless hideInNav}}
   {{#if items}}
     <div class="nav-group">
-      <{{ itemHeadingTag headingNumber }} class="nav-group-title" {{{ ariaLevel headingNumber }}}>{{name}}</{{ itemHeadingTag headingNumber }}>
-      <ul class="nav-group-items navItems">
+      <{{ itemHeadingTag headingNumber }} class="nav-group-title {{#if (equal name "Queries")}}operation-section query-nav-item{{else if (equal name "Types")}}operation-section types-nav-item{{else if (equal name "Mutations")}}operation-section mutation-nav-item{{/if}}" {{#if (equal name "Queries")}}onclick="toggleNavItem(this);"{{else if (equal name "Types")}}onclick="toggleNavItem(this);"{{else if (equal name "Mutations")}}onclick="toggleNavItem(this);"{{/if}} {{{ ariaLevel headingNumber }}}>{{name}}</{{ itemHeadingTag headingNumber }}>
+      <ul class="nav-group-items {{#if (equal name "Queries")}}schema-section{{else if (equal name "Mutations")}}schema-section{{else if (equal name "Types")}}schema-section{{/if}} navItems">
         {{#each items}}
           {{#if makeNavSection}}
             {{>layout/nav/section-item headingNumber=(math ../headingNumber "+" 1 )}}

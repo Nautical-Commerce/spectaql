@@ -1,16 +1,14 @@
 <section id="{{./htmlId}}"
   class="operation operation-{{#if isQuery}}query{{else if isMutation}}mutation{{else if isSubscription}}subscription{{else}}unknown{{/if}}"
   data-traverse-target="{{./htmlId}}">
-  {{# unless @first }}
     {{#if parentHtmlId }}
       <div class="operation-group-name">
         <a href="#group-{{./parentHtmlId}}">{{./parentName}}</a>
       </div>
     {{/if}}
-  {{/unless}}
 
   <h2 class="operation-heading {{#if (and isDeprecated (not @root.info.x-hideIsDeprecated)) }}operation-deprecated{{/if}}">
-    <i class="fas fa-link copy-icon"></i>
+    <i class="fas fa-link copy-icon" onclick="copyAnchor(this)"></i>
     {{md (codify name) stripParagraph="true"}}
     {{#if isQuery}}<span class="badge badge--query">Query</span>{{else if isMutation}}<span class="badge badge--mutation">Mutation</span>{{else if isSubscription}}<span class="badge badge--mutation">Subscription</span>{{/if}}
   </h2>

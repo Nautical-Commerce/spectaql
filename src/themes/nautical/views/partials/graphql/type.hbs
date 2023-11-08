@@ -1,13 +1,11 @@
 <section id="{{./htmlId}}"
   class="definition definition-{{ kebabCase ./kind defaultValue='unknown' }}"
   data-traverse-target="{{./htmlId}}">
-  {{#unless @first }}
     {{#if parentHtmlId }}
       <div class="definition-group-name">
         <a href="#group-{{parentHtmlId}}">{{./parentName}}</a>
       </div>
     {{/if}}
-  {{/unless}}
   {{#if name}}
     <h2 class="definition-heading"><i class="fas fa-link copy-icon"></i> {{name}} <span class="badge badge--type">{{kind}}</span></h2>
   {{/if}}

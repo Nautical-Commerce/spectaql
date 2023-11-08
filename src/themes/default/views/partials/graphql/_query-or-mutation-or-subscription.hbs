@@ -1,13 +1,11 @@
 <section id="{{./htmlId}}"
   class="operation operation-{{#if isQuery}}query{{else if isMutation}}mutation{{else if isSubscription}}subscription{{else}}unknown{{/if}}"
   data-traverse-target="{{./htmlId}}">
-  {{# unless @first }}
     {{#if parentHtmlId }}
       <div class="operation-group-name">
         <a href="#group-{{./parentHtmlId}}">{{./parentName}}</a>
       </div>
     {{/if}}
-  {{/unless}}
 
   <h2 class="operation-heading {{#if (and isDeprecated (not @root.info.x-hideIsDeprecated)) }}operation-deprecated{{/if}}">
     {{md (codify name) stripParagraph="true"}} 
