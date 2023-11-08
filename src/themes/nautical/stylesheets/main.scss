@@ -342,7 +342,7 @@ $text-color-examples: white;
   .group-heading {
     padding-top: math.div($content-padding, 2);
     padding-bottom: math.div($content-padding, 2);
-    margin-bottom: $container-padding-desktop;
+    margin-bottom: 0;
     font-weight: normal;
 
     @include containerPaddingHorizontal();
