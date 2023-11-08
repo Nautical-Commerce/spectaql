@@ -1,4 +1,4 @@
 window.addEventListener('DOMContentLoaded', (event) => {
-  toggleMenu()
-  scrollSpy()
+  toggleMenu();
+  scrollSpy();
 })

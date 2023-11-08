@@ -220,7 +220,7 @@ module.exports = ({
     'groupedProductRemoveProducts'
   ];
   
-  const importAndExportSection = [
+  const importSection = [
     'availableImportSources',
     'catalogImportProcess',
     'catalogImportProcesses',
@@ -229,15 +229,23 @@ module.exports = ({
     'CatalogImportProcessLogRecord',
     'CatalogImportProcessLogRecordOperation',
     'CatalogImportProcessStatus',
-    'exportFile',
-    'exportFiles',
-    'ExportCatalog',
-    'catalogExport',
     'ImportCatalog',
     'ImportError',
     'ImportEvent',
     'ImportEventsEnum',
     'ImportFile',
+  ];
+
+  const exportSection = [
+    'exportFile',
+    'exportFiles',
+    'ExportCatalog',
+    'catalogExport',
+    'ExportError',
+    'ExportErrorCode',
+    'ExportEvent',
+    'ExportEventsEnum',
+    'ExportInfoInput',
   ];
   
   const productsSection = [
@@ -990,6 +998,10 @@ module.exports = ({
     'addressUpdate',
     'AddressTypeEnum',
     'AddressValidationData',
+    'accountAddressCreate',
+    'accountAddressDelete',
+    'accountAddressSetDefault',
+    'accountAddressUpdate',
   ];
   const permissionGroupsSection = [
     'permissionGroup',
@@ -1015,10 +1027,6 @@ module.exports = ({
     'user',
     'userByEmail',
     'userSellers',
-    'accountAddressCreate',
-    'accountAddressDelete',
-    'accountAddressSetDefault',
-    'accountAddressUpdate',
     'accountConfirm',
     'ConfirmAccount',
     'accountDelete',
@@ -1414,7 +1422,8 @@ module.exports = ({
     digitalContentSection, 
     featuresSection, 
     groupedProductsSection, 
-    importAndExportSection, 
+    importSection, 
+    exportSection,
     productsSection, 
     locationsSection,
     productTypesSection, 
@@ -1735,6 +1744,31 @@ module.exports = ({
           ]
         },    
         {
+          name: 'Export',
+          makeNavSection: true,
+          makeContentSection: true,
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(exportSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(exportSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(exportSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        }, 
+        {
           name: 'Features',
           makeNavSection: true,
           makeContentSection: true,
@@ -1775,30 +1809,30 @@ module.exports = ({
           ]
         },  
         {
-          name: 'Import and export',
+          name: 'Import',
           makeNavSection: true,
           makeContentSection: true,
           items: [
             {
               name: 'Queries',
               makeNavSection: false,
-              items: getQueryTypeItems(importAndExportSection)
+              items: getQueryTypeItems(importSection)
             },
             {
               name: 'Mutations',
               makeNavSection: false,
-              items: getMutationTypeItems(importAndExportSection)
+              items: getMutationTypeItems(importSection)
             },
             {
               name: 'Types',
               makeNavSection: false,
-              items: getNormalTypeItems(importAndExportSection).map(type => ({
+              items: getNormalTypeItems(importSection).map(type => ({
                 ...type,
                 isType: true,
               }))
             },
           ]
-        },            
+        },              
         {
           name: 'Locations',
           makeNavSection: true,
@@ -2004,6 +2038,31 @@ module.exports = ({
           ]
         },
         {
+          name: 'Drafts',
+          makeNavSection: true,
+          makeContentSection: true,
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(draftsSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(draftsSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(draftsSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },
+        {
           name: 'Fulfillment',
           makeNavSection: true,
           makeContentSection: true,
@@ -2044,6 +2103,26 @@ module.exports = ({
           ]
         },
         {
+          name: 'Offers',
+          makeNavSection: true,
+          makeContentSection: true,
+          items: [
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(offersSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(offersSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },
+        {
           name: 'Orders',
           makeNavSection: true,
           makeContentSection: true,
@@ -2069,24 +2148,24 @@ module.exports = ({
           ]
         },
         {
-          name: 'Drafts',
+          name: 'Payments',
           makeNavSection: true,
           makeContentSection: true,
           items: [
             {
               name: 'Queries',
               makeNavSection: false,
-              items: getQueryTypeItems(draftsSection)
+              items: getQueryTypeItems(paymentsSection)
             },
             {
               name: 'Mutations',
               makeNavSection: false,
-              items: getMutationTypeItems(draftsSection)
+              items: getMutationTypeItems(paymentsSection)
             },
             {
               name: 'Types',
               makeNavSection: false,
-              items: getNormalTypeItems(draftsSection).map(type => ({
+              items: getNormalTypeItems(paymentsSection).map(type => ({
                 ...type,
                 isType: true,
               }))
@@ -2112,51 +2191,6 @@ module.exports = ({
               name: 'Types',
               makeNavSection: false,
               items: getNormalTypeItems(quotesSection).map(type => ({
-                ...type,
-                isType: true,
-              }))
-            },
-          ]
-        },
-        {
-          name: 'Offers',
-          makeNavSection: true,
-          makeContentSection: true,
-          items: [
-            {
-              name: 'Mutations',
-              makeNavSection: false,
-              items: getMutationTypeItems(offersSection)
-            },
-            {
-              name: 'Types',
-              makeNavSection: false,
-              items: getNormalTypeItems(offersSection).map(type => ({
-                ...type,
-                isType: true,
-              }))
-            },
-          ]
-        },
-        {
-          name: 'Payments',
-          makeNavSection: true,
-          makeContentSection: true,
-          items: [
-            {
-              name: 'Queries',
-              makeNavSection: false,
-              items: getQueryTypeItems(paymentsSection)
-            },
-            {
-              name: 'Mutations',
-              makeNavSection: false,
-              items: getMutationTypeItems(paymentsSection)
-            },
-            {
-              name: 'Types',
-              makeNavSection: false,
-              items: getNormalTypeItems(paymentsSection).map(type => ({
                 ...type,
                 isType: true,
               }))
@@ -2597,31 +2631,6 @@ module.exports = ({
               ]
             },
             {
-              name: 'Users',
-              makeNavSection: true,
-              makeContentSection: true,
-              items: [
-                {
-                  name: 'Queries',
-                  makeNavSection: false,
-                  items: getQueryTypeItems(usersSection)
-                },
-                {
-                  name: 'Mutations',
-                  makeNavSection: false,
-                  items: getMutationTypeItems(usersSection)
-                },
-                {
-                  name: 'Types',
-                  makeNavSection: false,
-                  items: getNormalTypeItems(usersSection).map(type => ({
-                    ...type,
-                    isType: true,
-                  }))
-                },
-              ]
-            },
-            {
               name: 'Staff',
               makeNavSection: true,
               makeContentSection: true,
@@ -2640,6 +2649,31 @@ module.exports = ({
                   name: 'Types',
                   makeNavSection: false,
                   items: getNormalTypeItems(staffSection).map(type => ({
+                    ...type,
+                    isType: true,
+                  }))
+                },
+              ]
+            },
+            {
+              name: 'Users',
+              makeNavSection: true,
+              makeContentSection: true,
+              items: [
+                {
+                  name: 'Queries',
+                  makeNavSection: false,
+                  items: getQueryTypeItems(usersSection)
+                },
+                {
+                  name: 'Mutations',
+                  makeNavSection: false,
+                  items: getMutationTypeItems(usersSection)
+                },
+                {
+                  name: 'Types',
+                  makeNavSection: false,
+                  items: getNormalTypeItems(usersSection).map(type => ({
                     ...type,
                     isType: true,
                   }))
@@ -2796,7 +2830,28 @@ module.exports = ({
               makeNavSection: false,
               hideInContent: true,
               makeContentSection: false,
-              items: [{
+              items: [
+                {
+                  name: 'Analytics',
+                  makeNavSection: true,
+                  makeContentSection: true,
+                  items: [
+                    {
+                      name: 'Queries',
+                      makeNavSection: false,
+                      items: getQueryTypeItems(insightsSection)
+                    },
+                    {
+                      name: 'Types',
+                      makeNavSection: false,
+                      items: getNormalTypeItems(insightsSection).map(type => ({
+                        ...type,
+                        isType: true,
+                      }))
+                    },
+                  ]
+                },
+                {
                 name: 'Business Entities',
                 makeNavSection: true,
                 makeContentSection: true,
@@ -2815,6 +2870,31 @@ module.exports = ({
                     name: 'Types',
                     makeNavSection: false,
                     items: getNormalTypeItems(businessEntitiesSection).map(type => ({
+                      ...type,
+                      isType: true,
+                    }))
+                  },
+                ]
+              },
+              {
+                name: 'Channels',
+                makeNavSection: true,
+                makeContentSection: true,
+                items: [
+                  {
+                    name: 'Queries',
+                    makeNavSection: false,
+                    items: getQueryTypeItems(channelsSection)
+                  },
+                  {
+                    name: 'Mutations',
+                    makeNavSection: false,
+                    items: getMutationTypeItems(channelsSection)
+                  },
+                  {
+                    name: 'Types',
+                    makeNavSection: false,
+                    items: getNormalTypeItems(channelsSection).map(type => ({
                       ...type,
                       isType: true,
                     }))
@@ -2847,6 +2927,31 @@ module.exports = ({
                 ]
               },
               {
+                name: 'Conversations',
+                makeNavSection: true,
+                makeContentSection: true,
+                items: [
+                  {
+                    name: 'Queries',
+                    makeNavSection: false,
+                    items: getQueryTypeItems(conversationsSection)
+                  },
+                  {
+                    name: 'Mutations',
+                    makeNavSection: false,
+                    items: getMutationTypeItems(conversationsSection)
+                  },
+                  {
+                    name: 'Types',
+                    makeNavSection: false,
+                    items: getNormalTypeItems(conversationsSection).map(type => ({
+                      ...type,
+                      isType: true,
+                    }))
+                  },
+                ]
+              },
+              {
                 name: 'Documents',
                 makeNavSection: true,
                 makeContentSection: true,
@@ -2860,26 +2965,6 @@ module.exports = ({
                     name: 'Types',
                     makeNavSection: false,
                     items: getNormalTypeItems(documentsSection).map(type => ({
-                      ...type,
-                      isType: true,
-                    }))
-                  },
-                ]
-              },
-              {
-                name: 'Insights',
-                makeNavSection: true,
-                makeContentSection: true,
-                items: [
-                  {
-                    name: 'Queries',
-                    makeNavSection: false,
-                    items: getQueryTypeItems(insightsSection)
-                  },
-                  {
-                    name: 'Types',
-                    makeNavSection: false,
-                    items: getNormalTypeItems(insightsSection).map(type => ({
                       ...type,
                       isType: true,
                     }))
@@ -2911,56 +2996,6 @@ module.exports = ({
                   },
                 ]
               },
-                  {
-                    name: 'Channels',
-                    makeNavSection: true,
-                    makeContentSection: true,
-                    items: [
-                      {
-                        name: 'Queries',
-                        makeNavSection: false,
-                        items: getQueryTypeItems(channelsSection)
-                      },
-                      {
-                        name: 'Mutations',
-                        makeNavSection: false,
-                        items: getMutationTypeItems(channelsSection)
-                      },
-                      {
-                        name: 'Types',
-                        makeNavSection: false,
-                        items: getNormalTypeItems(channelsSection).map(type => ({
-                          ...type,
-                          isType: true,
-                        }))
-                      },
-                    ]
-                  },
-                  {
-                    name: 'Conversations',
-                    makeNavSection: true,
-                    makeContentSection: true,
-                    items: [
-                      {
-                        name: 'Queries',
-                        makeNavSection: false,
-                        items: getQueryTypeItems(conversationsSection)
-                      },
-                      {
-                        name: 'Mutations',
-                        makeNavSection: false,
-                        items: getMutationTypeItems(conversationsSection)
-                      },
-                      {
-                        name: 'Types',
-                        makeNavSection: false,
-                        items: getNormalTypeItems(conversationsSection).map(type => ({
-                          ...type,
-                          isType: true,
-                        }))
-                      },
-                    ]
-                  },
                   {
                     name: 'Menus',
                     makeNavSection: true,

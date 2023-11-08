@@ -3048,6 +3048,11 @@
   "resolved" "https://registry.npmjs.org/highlight.js/-/highlight.js-11.7.0.tgz"
   "version" "11.7.0"
 
+"highlightjs-copy@^1.0.5":
+  "integrity" "sha512-e7vXcq4HyMqXEw9omt8riYMxEGSanjY2bLQL91Jk0zGnqEhs/pO/6X4tC0PQEVkGBqUdYUyfr06V/VEfQZ7Pmg=="
+  "resolved" "https://registry.npmjs.org/highlightjs-copy/-/highlightjs-copy-1.0.5.tgz"
+  "version" "1.0.5"
+
 "homedir-polyfill@^1.0.1":
   "integrity" "sha512-eSmmWE5bZTK2Nou4g0AI3zZ9rswp7GRKoKXS1BLUkvPviOqs4YTN1djQIqrXy9k5gEtdLPy86JjRwsNM9tnDcA=="
   "resolved" "https://registry.npmjs.org/homedir-polyfill/-/homedir-polyfill-1.0.3.tgz"

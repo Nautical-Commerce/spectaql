@@ -107,6 +107,7 @@
     "grunt-sass": "^3.0.2",
     "handlebars": "^4.7.7",
     "highlight.js": "^11.4.0",
+    "highlightjs-copy": "^1.0.5",
     "htmlparser2": "~9.0.0",
     "js-beautify": "~1.14.7",
     "js-yaml": "^4.1.0",

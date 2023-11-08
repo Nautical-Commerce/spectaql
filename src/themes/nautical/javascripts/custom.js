@@ -1,37 +1,67 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const elements = document.querySelectorAll('.nav-group-title');
-  
-  elements.forEach((el) => {
-    const content = el.textContent.trim();
-    if (['Queries', 'Mutations', 'Types', 'Definitions'].includes(content)) {
-      // Initialize with a '+' sign for expandable items
-      el.innerHTML += ' <span class="toggle-sign">+</span>';
-      
-      const nextUl = el.nextElementSibling;
-      if (nextUl && nextUl.tagName === 'UL') {
-        // Hide the UL initially
-        nextUl.style.display = 'none';
-        nextUl.classList.add('schema-section');
+  const navItems = document.querySelectorAll('.nav-group-title');
 
-        // Assign an onclick function to toggle the UL visibility and sign
-        el.addEventListener('click', function () {
+  // Initialize all navItems with a '+' sign
+  navItems.forEach(navItem => {
+    const content = navItem.textContent.trim();
+    if (['Queries', 'Mutations', 'Types', 'Definitions'].includes(content)) {
+      appendSign(navItem, '+');
+      const nextUl = navItem.nextElementSibling;
+      if (nextUl && nextUl.tagName === 'UL') {
+        nextUl.style.display = 'none'; // Hide UL initially
+        nextUl.classList.add('schema-section');
+        navItem.addEventListener('click', function () {
           toggleNavItems(nextUl, this);
         });
-
-        // Add specific class based on content
-        addNavItemClass(el, content);
+        addNavItemClass(navItem, content);
       }
     }
   });
+
+  // Function to check and update the expansion and signs based on active class
+  function updateSectionsBasedOnActiveClass() {
+    navItems.forEach(navItem => {
+      const nextUl = navItem.nextElementSibling;
+      if (nextUl && nextUl.classList.contains('schema-section')) {
+        // Check if any <a> within the <ul> has the 'nav-scroll-active' class
+        const activeLink = nextUl.querySelector('li a.nav-scroll-active');
+        const isExpanded = nextUl.style.display === 'block';
+
+        if (activeLink && !isExpanded) {
+          // Expand and update sign if there's an active link and the section is not already expanded
+          nextUl.style.display = 'block';
+          updateSign(navItem, '-');
+        } else if (!activeLink && isExpanded) {
+          // Collapse and update sign if there's no active link and the section is expanded
+          nextUl.style.display = 'none';
+          updateSign(navItem, '+');
+        }
+      }
+    });
+  }
+
+  // Listen to scroll events for changing active section
+  document.addEventListener('scroll', updateSectionsBasedOnActiveClass);
+
+  // Listen for hash changes (when jumping to a section)
+  window.addEventListener('hashchange', updateSectionsBasedOnActiveClass);
 });
 
 function toggleNavItems(ulElement, navGroupTitle) {
   const isHidden = ulElement.style.display === 'none';
-  ulElement.style.display = isHidden ? 'block' : 'none'; // Toggle display
+  ulElement.style.display = isHidden ? 'block' : 'none';
+  updateSign(navGroupTitle, isHidden ? '-' : '+');
+}
 
-  // Update the toggle sign based on the UL visibility
+function appendSign(navGroupTitle, sign) {
+  navGroupTitle.innerHTML += ` <span class="toggle-sign">${sign}</span>`;
+}
+
+function updateSign(navGroupTitle, sign) {
   const toggleSign = navGroupTitle.querySelector('.toggle-sign');
-  toggleSign.textContent = isHidden ? '-' : '+';
+  if (toggleSign) {
+    toggleSign.textContent = sign;
+  }
 }
 
 function addNavItemClass(navGroupTitle, content) {
@@ -39,16 +69,14 @@ function addNavItemClass(navGroupTitle, content) {
     'Queries': 'query-nav-item',
     'Mutations': 'mutation-nav-item',
     'Types': 'types-nav-item',
-    'Definitions': 'definitions-nav-item',
   };
-
-  // Add the new class based on the mapping
   const className = classMap[content];
   if (className) {
     navGroupTitle.classList.add(className);
   }
 }
 
+//copy header anchor link 
 document.addEventListener("DOMContentLoaded", function() {
   document.querySelectorAll('.copy-icon').forEach(function(element) {
     element.addEventListener('click', function() {

@@ -138,7 +138,7 @@ th {
   font-size: 0.7rem !important;
   text-transform: lowercase !important;
   margin-top: -10px !important;
-  margin-left: .75em;
+  margin-left: .75em !important;
 }
 
 .query-nav-item {
@@ -146,13 +146,19 @@ th {
   font-size: 0.7rem !important;
   text-transform: lowercase !important;
   margin-top: -10px !important;
-  margin-left: .75em;
+  margin-left: .75em !important;
 }
 .mutation-nav-item {
   color: #FCD839 !important;
   font-size: 0.7rem !important;
   text-transform: lowercase !important;
   margin-top: -10px !important;
-  margin-left: .75em;
+  margin-left: .75em !important;
 }
+
+.nav-scroll-expand h5 {
+  font-weight: 700;
+  color: white;
+}
+
 }

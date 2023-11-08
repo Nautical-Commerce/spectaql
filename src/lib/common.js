@@ -4,6 +4,7 @@ import stringify from 'json-stringify-pretty-compact'
 import cheerio from 'cheerio'
 import { marked } from 'marked'
 import hljs from 'highlight.js'
+import { CopyButtonPlugin } from 'highlightjs-copy'
 import {
   ourFunction as hljsGraphqlLang,
   // hljsFunction as hljsGraphqlLang,
@@ -17,6 +18,10 @@ import { getExampleForGraphQLScalar } from '../themes/default/helpers/graphql-sc
 hljs.configure({
   // "useBR": true
 })
+
+hljs.addPlugin(new CopyButtonPlugin());
+hljs.initHighlightingOnLoad();
+hljs.initLineNumbersOnLoad();
 
 hljs.registerLanguage('graphql', hljsGraphqlLang)
 
@@ -43,7 +48,7 @@ const QUOTE_TAG_REGEX = new RegExp(QUOTE_TAG, 'g')
 const QUOTE_HTML = '&quot;'
 const QUOTE_HTML_REGEX = new RegExp(QUOTE_HTML, 'g')
 
-// Map Scalar types to example data to use fro them
+// Map Scalar types to example data to use from them
 const SCALAR_TO_EXAMPLE = {
   String: ['abc123', 'xyz789'],
   Int: [123, 987],
@@ -58,7 +63,7 @@ const SCALAR_TO_EXAMPLE = {
     new Date(new Date().setMonth(new Date().getMonth() - 6).valueOf()),
   ].map((date) => date.toISOString()),
   JSON: SPECIAL_TAG + '{}' + SPECIAL_TAG,
-  ID: [4, '4'],
+  ID: ['UHJvZHVjdDoxNDU=', 'UHJvZHVjdFZhcmlhbnQ6Mjg0'],
 }
 
 function unwindTags(str) {
@@ -170,13 +175,15 @@ function highlight(code, language) {
   let highlighted
   if (language) {
     try {
-      highlighted = hljs.highlight(code, { language }).value
+      highlighted = hljs.highlight(code, { language }).value;
+      hljs.addPlugin(new CopyButtonPlugin());
     } catch (e) {
       console.error(e)
     }
   }
   if (!highlighted) {
-    highlighted = hljs.highlightAuto(code).value
+    highlighted = hljs.highlightAuto(code).value;
+    hljs.addPlugin(new CopyButtonPlugin());
   }
 
   return (
