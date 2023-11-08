@@ -23,9 +23,23 @@ function updateSectionsBasedOnActiveClass() {
   });
 }
 
-// Listen for scroll events and hash changes to update sections accordingly.
-document.addEventListener('scroll', updateSectionsBasedOnActiveClass);
+let timeoutId = null;
+
+function throttledUpdateSections() {
+  // Clear the previous timeout if it exists
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+  }
+  
+  // Set a timeout to update sections after a short delay
+  // This reduces the frequency of updates during scroll
+  timeoutId = setTimeout(updateSectionsBasedOnActiveClass, 200);
+}
+
+// Listen for scroll events and use the throttled function instead
+document.addEventListener('scroll', throttledUpdateSections);
 window.addEventListener('hashchange', updateSectionsBasedOnActiveClass);
+
 
 // get anchor link function definition
 function copyAnchor(clickedElement) {

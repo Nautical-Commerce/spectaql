@@ -432,7 +432,8 @@ module.exports = ({
     'BidRole',
     'BidRoleEnum',
     'BidStatus',
-    'RejectBid'
+    'RejectBid',
+    'orderOfferConvertToNauticalQuoteOrder',
   ];
   const quotesSection = [
     'quoteOrders',
@@ -442,6 +443,7 @@ module.exports = ({
     'OrderQuoteFilterInput',
     'nauticalQuoteOrderByToken',
     'nauticalQuoteOrderCancel',
+    'NauticalOrderQuoteFilterInput',
     'nauticalQuoteOrderSendToCustomer',
   ];
   const draftsSection = [
@@ -474,16 +476,12 @@ module.exports = ({
     'NauticalOrderDraftFilterInput',
     'OrderDraftFilterInput',
   ];
-  const ordersSection = [
+  const nauticalOrdersSection = [
     'nauticalOrders',
     'nauticalOrder',
     'nauticalOrdersTotal',
     'nauticalOrderByToken',
     'nauticalSuborders',
-    'order',
-    'orderByToken',
-    'orders',
-    'ordersTotal',
     'nauticalOrderAddNote',
     'nauticalOrderUpdateApplyVoucherCode',
     'nauticalOrderUpdateDeleteDiscount',
@@ -493,11 +491,27 @@ module.exports = ({
     'nauticalOrderLineBulkCancel',
     'nauticalOrderMarkAsPaid',
     'nauticalOrderPaymentCreate',
-    'nauticalOrderRefund',
     'nauticalOrderReplaceOrderLine',
     'nauticalOrderUpdateShipping',
     'nauticalOrderUpdate',
     'nauticalOrderVoid',
+    'ordersMapToNauticalOrder',
+    'MapOrdersToNauticalOrder',
+    'NauticalOrderEvent',
+    'NauticalOrderEventCountableConnection',
+    'NauticalOrderEventCountableEdge',
+    'NauticalOrderEventOrderLineObject',
+    'NauticalOrderLine',
+    'NauticalOrderOrderSource',
+    'NauticalOrderSubStatus',
+    'NauticalSecondaryOrderLine',
+    'NauticalSubOrder',
+  ];
+  const ordersSection = [
+    'order',
+    'orderByToken',
+    'orders',
+    'ordersTotal',
     'orderAddNote',
     'orderBulkCancel',
     'orderCancel',
@@ -507,23 +521,9 @@ module.exports = ({
     'orderFeeDelete',
     'orderMarkAsPaid',
     'orderPayoutStatusUpdate',
-    'orderRefund',
     'orderUpdateShipping',
     'orderUpdate',
     'orderVoid',
-    'ordersMapToNauticalOrder',
-    'MapOrdersToNauticalOrder',
-    'NauticalOrderEvent',
-    'NauticalOrderEventCountableConnection',
-    'NauticalOrderEventCountableEdge',
-    'NauticalOrderEventOrderLineObject',
-    'NauticalOrderLine',
-    'NauticalOrderOrderSource',
-    'NauticalOrderQuoteFilterInput',
-    'NauticalOrderSubStatus',
-    'NauticalSecondaryOrderLine',
-    'NauticalSubOrder',
-    'orderOfferConvertToNauticalQuoteOrder',
     'OrderAction',
     'OrderAffiliateSummaryType',
     'OrderDirection',
@@ -573,6 +573,8 @@ module.exports = ({
   const refundsSection = [
     'refund',
     'refunds',
+    'nauticalOrderRefund',
+    'orderRefund',
     'refundsChangeStatus',
     'refundCreate',
     'refundsDelete',
@@ -601,6 +603,7 @@ module.exports = ({
     'RefundPaymentTypeEnum',
     'RefundPaymentUpdateInput',
     'RefundScope',
+    'orderRefund'
   ];
   
   const returnsSection = [
@@ -1438,6 +1441,7 @@ module.exports = ({
     draftsSection,
     quotesSection,
     ordersSection, 
+    nauticalOrdersSection,
     paymentsSection, 
     refundsSection, 
     returnsSection, 
@@ -2103,6 +2107,31 @@ module.exports = ({
           ]
         },
         {
+          name: 'Marketplace Orders',
+          makeNavSection: true,
+          makeContentSection: true,
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(nauticalOrdersSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(nauticalOrdersSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(nauticalOrdersSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },
+        {
           name: 'Offers',
           makeNavSection: true,
           makeContentSection: true,
@@ -2116,31 +2145,6 @@ module.exports = ({
               name: 'Types',
               makeNavSection: false,
               items: getNormalTypeItems(offersSection).map(type => ({
-                ...type,
-                isType: true,
-              }))
-            },
-          ]
-        },
-        {
-          name: 'Orders',
-          makeNavSection: true,
-          makeContentSection: true,
-          items: [
-            {
-              name: 'Queries',
-              makeNavSection: false,
-              items: getQueryTypeItems(ordersSection)
-            },
-            {
-              name: 'Mutations',
-              makeNavSection: false,
-              items: getMutationTypeItems(ordersSection)
-            },
-            {
-              name: 'Types',
-              makeNavSection: false,
-              items: getNormalTypeItems(ordersSection).map(type => ({
                 ...type,
                 isType: true,
               }))
@@ -2241,6 +2245,31 @@ module.exports = ({
               name: 'Types',
               makeNavSection: false,
               items: getNormalTypeItems(returnsSection).map(type => ({
+                ...type,
+                isType: true,
+              }))
+            },
+          ]
+        },
+        {
+          name: 'Seller Orders',
+          makeNavSection: true,
+          makeContentSection: true,
+          items: [
+            {
+              name: 'Queries',
+              makeNavSection: false,
+              items: getQueryTypeItems(ordersSection)
+            },
+            {
+              name: 'Mutations',
+              makeNavSection: false,
+              items: getMutationTypeItems(ordersSection)
+            },
+            {
+              name: 'Types',
+              makeNavSection: false,
+              items: getNormalTypeItems(ordersSection).map(type => ({
                 ...type,
                 isType: true,
               }))
