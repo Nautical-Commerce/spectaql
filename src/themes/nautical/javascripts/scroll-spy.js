@@ -1,5 +1,5 @@
 function scrollSpy() {
-  var INIT_DELAY_MS = 500
+  var INIT_DELAY_MS = 300
   var SCROLL_DEBOUNCE_MS = 300
   var RESIZE_DEBOUNCE_MS = 300
 
