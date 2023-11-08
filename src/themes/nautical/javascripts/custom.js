@@ -4,28 +4,18 @@ document.addEventListener('DOMContentLoaded', function () {
   elements.forEach((el) => {
     const content = el.textContent.trim();
     if (['Queries', 'Mutations', 'Types', 'Definitions'].includes(content)) {
+      // Initialize with a '+' sign for expandable items
+      el.innerHTML += ' <span class="toggle-sign">+</span>';
+      
       const nextUl = el.nextElementSibling;
       if (nextUl && nextUl.tagName === 'UL') {
         // Hide the UL initially
         nextUl.style.display = 'none';
         nextUl.classList.add('schema-section');
 
-        // Assign an onclick function to toggle the UL
-        el.addEventListener('click', () => toggleNavItems(nextUl));
-
-        // Monitor changes to the active class on the a elements
-        const links = nextUl.querySelectorAll('a');
-        links.forEach(link => {
-          new MutationObserver((mutationsList, observer) => {
-            for (let mutation of mutationsList) {
-              if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                // If the nav-scroll-active class was added, show the UL
-                if (link.classList.contains('nav-scroll-active')) {
-                  nextUl.style.display = '';
-                }
-              }
-            }
-          }).observe(link, { attributes: true });
+        // Assign an onclick function to toggle the UL visibility and sign
+        el.addEventListener('click', function () {
+          toggleNavItems(nextUl, this);
         });
 
         // Add specific class based on content
@@ -35,9 +25,13 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-function toggleNavItems(ulElement) {
+function toggleNavItems(ulElement, navGroupTitle) {
   const isHidden = ulElement.style.display === 'none';
-  ulElement.style.display = isHidden ? '' : 'none';
+  ulElement.style.display = isHidden ? 'block' : 'none'; // Toggle display
+
+  // Update the toggle sign based on the UL visibility
+  const toggleSign = navGroupTitle.querySelector('.toggle-sign');
+  toggleSign.textContent = isHidden ? '-' : '+';
 }
 
 function addNavItemClass(navGroupTitle, content) {
@@ -45,8 +39,10 @@ function addNavItemClass(navGroupTitle, content) {
     'Queries': 'query-nav-item',
     'Mutations': 'mutation-nav-item',
     'Types': 'types-nav-item',
+    'Definitions': 'definitions-nav-item',
   };
 
+  // Add the new class based on the mapping
   const className = classMap[content];
   if (className) {
     navGroupTitle.classList.add(className);
