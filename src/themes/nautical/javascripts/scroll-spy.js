@@ -1,7 +1,7 @@
 function scrollSpy() {
   var INIT_DELAY_MS = 300
-  var SCROLL_DEBOUNCE_MS = 200
-  var RESIZE_DEBOUNCE_MS = 200
+  var SCROLL_DEBOUNCE_MS = 300
+  var RESIZE_DEBOUNCE_MS = 500
 
   var PADDING = 0
   // If we are applying a scroll padding, we'll be doing it to the HTML element
