@@ -1,5 +1,5 @@
 <section id="{{./htmlId}}"
-  class="definition definition-{{ kebabCase ./kind defaultValue='unknown' }}"
+  class="lazy-section definition definition-{{ kebabCase ./kind defaultValue='unknown' }}"
   data-traverse-target="{{./htmlId}}">
     {{#if parentHtmlId }}
       <div class="definition-group-name">
@@ -10,7 +10,7 @@
     <h2 class="definition-heading"><i class="fas fa-link copy-icon" onclick="copyAnchor(this)"></i> {{name}} <span class="badge badge--type">{{kind}}</span></h2>
   {{/if}}
 
-  <div class="doc-row">
+  <div class="hidden-content doc-row">
     {{#if (equal ./kind "SCALAR")}}
       {{>graphql/kinds/scalar .}}
     {{else if (equal ./kind "OBJECT")}}
