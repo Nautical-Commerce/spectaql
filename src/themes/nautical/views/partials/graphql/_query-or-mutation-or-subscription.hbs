@@ -75,11 +75,11 @@
             {{printJSON response.data}}
           </div>
         {{/if}}
-        {{#if isQuery}}
-        {{tryItNowQuery query variables}}
-        {{else if isMutation}}
-        {{tryItNowMutation mutation variables}}
-        {{/if}}
+        {{!#if isQuery}}
+        {{!tryItNowQuery query variables}}
+        {{!else if isMutation}}
+        {{!tryItNowMutation mutation variables}}
+        {{!/if}}
       {{/if}}
     </div>
   </div>
