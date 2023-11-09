@@ -150,7 +150,6 @@ module.exports = ({
     'attributeValueDelete',
     'attributeValueUpdate',
     'attributeValuesReorder',
-    'AttributeReorderValues',
     'SelectedAttribute',
   ];  
 
@@ -225,11 +224,11 @@ module.exports = ({
     'catalogImportProcess',
     'catalogImportProcesses',
     'catalogImport',
+    'productsImport',
     'CatalogImportOperation',
     'CatalogImportProcessLogRecord',
     'CatalogImportProcessLogRecordOperation',
     'CatalogImportProcessStatus',
-    'ImportCatalog',
     'ImportError',
     'ImportEvent',
     'ImportEventsEnum',
@@ -239,13 +238,15 @@ module.exports = ({
   const exportSection = [
     'exportFile',
     'exportFiles',
-    'ExportCatalog',
     'catalogExport',
     'ExportError',
     'ExportErrorCode',
     'ExportEvent',
     'ExportEventsEnum',
     'ExportInfoInput',
+    'productsExport',
+    'ExportProductsInput',
+    'ExportScope',
   ];
   
   const productsSection = [
@@ -259,8 +260,6 @@ module.exports = ({
     'productReorderVariants',
     'productSetAvailabilityForPurchase',
     'productUpdate',
-    'productsExport',
-    'productsImport',
     'productImageBulkDelete',
     'productImageCreate',
     'productImageDelete',
@@ -280,9 +279,6 @@ module.exports = ({
     'ProductSubStatus',
     'ProductSubStatusEnum',
     'ProductAction',
-    'ExportProducts',
-    'ExportProductsInput',
-    'ExportScope',
   ];
 
   const locationsSection = [
@@ -319,15 +315,12 @@ module.exports = ({
     'productVariantSetDefault',
     'productVariantImageAssign',
     'productVariantImageUnassign',
-    'VariantImageAssign',
-    'VariantImageUnassign',
     'VariantPricingInfo',
     'VariantSize',
     'VariantSizeInput',
     'VariantSortField',
     'VariantSortingInput',
     'VariantUniquenessEnum',
-    'ProductVariantReorder',
     'ProductVariantReportType',
     'ProductVariantSearchFieldEnum',
     'ProductVariantSearchInput',
@@ -349,7 +342,6 @@ module.exports = ({
     'checkoutNoteUpdate',
     'checkoutSetTransactionCurrency',
     'checkoutShippingAddressUpdate',
-    'CheckoutShippingMethodUpdate',
     'checkoutLine',
     'checkoutLines',
     'checkoutLinesAdd',
@@ -383,7 +375,7 @@ module.exports = ({
     'customerFilterInput',
     'CustomerOrderStatusFilter',
     'CustomerOrder',
-    'ExportCustomers',
+    'customersExport'
   ];
   const currencySection = [
     'currencies',
@@ -424,7 +416,6 @@ module.exports = ({
     'bidCreate',
     'bidReject',
     'OfferOrderSubStatusFilter',
-    'AcceptBid',
     'Bid',
     'BidError',
     'BidErrorCode',
@@ -432,13 +423,11 @@ module.exports = ({
     'BidRole',
     'BidRoleEnum',
     'BidStatus',
-    'RejectBid',
     'orderOfferConvertToNauticalQuoteOrder',
   ];
   const quotesSection = [
     'quoteOrders',
     'nauticalQuoteOrders',
-    'SendQuoteToCustomer',
     'QuoteOrderSubStatusFilter',
     'OrderQuoteFilterInput',
     'nauticalQuoteOrderByToken',
@@ -496,7 +485,6 @@ module.exports = ({
     'nauticalOrderUpdate',
     'nauticalOrderVoid',
     'ordersMapToNauticalOrder',
-    'MapOrdersToNauticalOrder',
     'NauticalOrderEvent',
     'NauticalOrderEventCountableConnection',
     'NauticalOrderEventCountableEdge',
@@ -515,15 +503,12 @@ module.exports = ({
     'orderAddNote',
     'orderBulkCancel',
     'orderCancel',
-    'orderCapture',
     'orderChannelUpdate',
     'orderFeeCreate',
     'orderFeeDelete',
-    'orderMarkAsPaid',
     'orderPayoutStatusUpdate',
     'orderUpdateShipping',
     'orderUpdate',
-    'orderVoid',
     'OrderAction',
     'OrderAffiliateSummaryType',
     'OrderDirection',
@@ -558,7 +543,6 @@ module.exports = ({
     'payments',
     'getClientSecret',
     'paymentCapture',
-    'paymentRefund',
     'paymentVoid',
     'CreditCard',
     'Transaction',
@@ -573,8 +557,6 @@ module.exports = ({
   const refundsSection = [
     'refund',
     'refunds',
-    'nauticalOrderRefund',
-    'orderRefund',
     'refundsChangeStatus',
     'refundCreate',
     'refundsDelete',
@@ -609,7 +591,6 @@ module.exports = ({
   const returnsSection = [
     'returns',
     'fulfillmentBulkReturn',
-    'BulkFulfillmentReturn',
     'BulkFulfillmentReturnInput',
     'nauticalOrderReturnFromStorefrontNotification',
     'nauticalOrderReturnNotification',
@@ -735,7 +716,6 @@ module.exports = ({
     'payoutDatesUpdate',
     'payoutStatusUpdate',
     'payoutUpdate',
-    'GetPayoutOnboardingLink',
     'vendorPayout',
     'vendorPayoutList',
     'vendorPayouts',
@@ -781,7 +761,6 @@ module.exports = ({
     'sellerAddressSetDefault',
     'sellerAddressUpdate',
     'sellerAgreementAcknowledge',
-    'AcknowledgeSellerAgreement',
     'sellerDataCreate',
     'sellerDataUpdate',
     'sellerLogoUpdate',
@@ -795,12 +774,7 @@ module.exports = ({
     'sellerUserMappingCreate',
     'sellerWithOwnerCreate',
     'Vendor',
-    'UpdateSellerData',
-    'UpdateSellerSettings',
-    'CreateSellerData',
     'CreateSellerNote',
-    'CreateSellerShell',
-    'CreateSellerUserMapping',
     'SellerCards',
     'SellerChecklistCompetitionTriggersEnum',
     'SellerChecklistInput',
@@ -1031,7 +1005,6 @@ module.exports = ({
     'userByEmail',
     'userSellers',
     'accountConfirm',
-    'ConfirmAccount',
     'accountDelete',
     'accountRegister',
     'accountRequestDeletion',
@@ -1043,7 +1016,6 @@ module.exports = ({
     'accountError',
     'accountErrorCode',
     'accountInput',
-    'AccountSetDefaultAddress',
     'UserPermission',
     'UserCreateInput'
   ];
@@ -1060,15 +1032,11 @@ module.exports = ({
   const emailSection = [
     'emailChangeConfirm',
     'emailChangeRequest',
-    'ConfirmEmailChange',
-    'RequestEmailChange',
   ];
   const passwordSection = [
     'passwordChange',
     'passwordRequestReset',
     'passwordSet',
-    'SetPassword',
-    'RequestPasswordReset',
   ];
   const appsSection = [
     'app',
@@ -1121,10 +1089,6 @@ module.exports = ({
     'metadataUpdate',
     'privateMetadataUpdate',
     'privateMetadataDelete',
-    'UpdateMetadata',
-    'UpdatePrivateMetadata',
-    'DeleteMetadata',
-    'DeletePrivateMetadata',
     'MetadataError',
     'MetadataErrorCode',
     'MetadataFilterInput',
@@ -1296,7 +1260,6 @@ module.exports = ({
     'mentionsByReceiver',
     'mentionsBySender',
     'mentionCreate',
-    'CreateMention',
   ];
   const micrositesSection = [
     'microsite',
@@ -3176,19 +3139,19 @@ module.exports = ({
                     ]
                   }
                 ]},
-   {
-      name: 'Definitions',
-      makeContentSection: true,
-      items: normalTypes
-      .filter(type => 
-        !allUsedTypeNames.has(type.name) && 
-        !omittedTypeNames.includes(type.name)
-      )
-      .map(type => ({
-        ...type,
-        isType: true,
-      }))
-      .sort(sortByName)
-   },
+//   {
+//      name: 'Definitions',
+//      makeContentSection: true,
+//      items: normalTypes
+//      .filter(type => 
+//        !allUsedTypeNames.has(type.name) && 
+//        !omittedTypeNames.includes(type.name)
+//      )
+//      .map(type => ({
+//        ...type,
+//        isType: true,
+//      }))
+//      .sort(sortByName)
+ //  },
   ].filter(Boolean)
 }
