@@ -71,25 +71,3 @@ function copyAnchor(clickedElement) {
   window.history.replaceState(null, null, '#' + id);
   document.getElementById(id).scrollIntoView();
 }
-
-//lazy load sections
-function lazyLoad() {
-  let lazySections = document.querySelectorAll('.lazy-section');
-
-  let sectionObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        let hiddenContent = entry.target.querySelectorAll('.hidden-content');
-        hiddenContent.forEach(function(content) {
-          content.classList.remove('hidden-content');
-        });
-        observer.unobserve(entry.target);
-      }
-    });
-  });
-  lazySections.forEach(function(section) {
-    sectionObserver.observe(section);
-  });
-}
-
-

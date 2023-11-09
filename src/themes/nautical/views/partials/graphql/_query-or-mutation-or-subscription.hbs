@@ -1,5 +1,5 @@
 <section id="{{./htmlId}}"
-  class="lazy-section operation operation-{{#if isQuery}}query{{else if isMutation}}mutation{{else if isSubscription}}subscription{{else}}unknown{{/if}}"
+  class="operation operation-{{#if isQuery}}query{{else if isMutation}}mutation{{else if isSubscription}}subscription{{else}}unknown{{/if}}"
   data-traverse-target="{{./htmlId}}">
     {{#if parentHtmlId }}
       <div class="operation-group-name">
@@ -14,7 +14,7 @@
   </h2>
   
   {{#if (and deprecationReason (not @root.info.x-hideDeprecationReason))}}
-    <div class="doc-row hidden-content">
+    <div class="doc-row">
       <div class="doc-copy">
         <div class="doc-copy-section">
           <div class="deprecation-reason">
@@ -26,7 +26,7 @@
   {{/if}}
 
   {{#if description}}
-    <div class="doc-row hidden-content">
+    <div class="doc-row">
       <div class="doc-copy">
         <div class="operation-description doc-copy-section">
           <h5>Description</h5>
@@ -36,7 +36,7 @@
     </div>
   {{/if}}
 
-  <div class="doc-row hidden-content">
+  <div class="doc-row">
     <div class="doc-copy">
       {{#if response}}
         <div class="operation-response doc-copy-section">
@@ -54,23 +54,23 @@
       {{>graphql/_query-or-mutation-arguments}}
     </div>
 
-    <div class="doc-examples hidden-content">
+    <div class="doc-examples">
       {{#if (firstTruthy query mutation subscription)}}
         <h4 class="example-heading">Example</h4>
 
-        <div class="example-section example-section-is-code operation-query-example hidden-content">
+        <div class="example-section example-section-is-code operation-query-example">
           {{#if isMutation}}<h5>Mutation</h5>{{else}}<h5>Query</h5>{{/if}}
           {{printGraphQL (firstTruthy query mutation subscription)}}
         </div>
 
         {{#if variables}}
-          <div class="example-section example-section-is-code operation-variables-example hidden-content">
+          <div class="example-section example-section-is-code operation-variables-example">
             <h5>Variables</h5>
             {{printJSON variables}}
           </div>
         {{/if}}
         {{#if response.data}}
-          <div class="example-section example-section-is-code operation-response-example hidden-content">
+          <div class="example-section example-section-is-code operation-response-example">
             <h5>Response</h5>
             {{printJSON response.data}}
           </div>
